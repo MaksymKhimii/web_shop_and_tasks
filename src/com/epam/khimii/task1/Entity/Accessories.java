@@ -4,16 +4,16 @@ package com.epam.khimii.task1.Entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Accessory extends Product{
-
+public class Accessories extends Product{
     private String type;
     private String brand;
 
-    public Accessory() {
+    public Accessories() {
+        super();
     }
 
 
-    public Accessory(String name, BigDecimal price, String country, String type, String brand) {
+    public Accessories(String name, BigDecimal price, String country, String type, String brand) {
         super(name, price, country);
         this.type = type;
         this.brand = brand;
@@ -48,7 +48,7 @@ public class Accessory extends Product{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        Accessory that = (Accessory) o;
+        Accessories that = (Accessories) o;
         return Objects.equals(type, that.type) && Objects.equals(brand, that.brand);
     }
 
