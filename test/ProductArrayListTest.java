@@ -1,5 +1,6 @@
 import com.epam.khimii.task1.Entity.Product;
 import com.epam.khimii.task1.List.ProductArrayList;
+import org.junit.Before;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -8,10 +9,21 @@ import java.math.BigDecimal;
 
 public class ProductArrayListTest {
 
-    @Test
-    public void shouldAddToStart() {
+    /**
+     * the creation of an ArrayList and the
+     * first adding new Product was taken out of tests
+     * @return ProductArrayList<Product with one Prod
+     */
+    @Before
+    public ProductArrayList<Product> onceExecutedBeforeAll() {
         ProductArrayList<Product> products = new ProductArrayList<>();
         products.add(0, new Product("test", new BigDecimal("10"), "uk"));
+        return products;
+    }
+
+   @Test
+    public void shouldAddToStart() {
+        ProductArrayList<Product> products = new ProductArrayList<>();
         Product expected = new Product("test", new BigDecimal("11"), "uk");
         products.add(0, expected);
         Assert.assertEquals(expected, products.get(0));
@@ -19,8 +31,7 @@ public class ProductArrayListTest {
 
     @Test
     public void shouldAddToEnd() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(0, new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         Product expected = new Product("test", new BigDecimal("11"), "uk");
         products.add(products.size(), expected);
         Assert.assertEquals(expected, products.get(products.size() - 1));
@@ -29,7 +40,6 @@ public class ProductArrayListTest {
     @Test
     public void shouldAddToMiddle() {
         ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(0, new Product("test", new BigDecimal("10"), "uk"));
         products.add(0, new Product("test", new BigDecimal("11"), "uk"));
         products.add(0, new Product("test", new BigDecimal("12"), "uk"));
         Product expected = new Product("test", new BigDecimal("13"), "uk");
@@ -37,10 +47,10 @@ public class ProductArrayListTest {
         Assert.assertEquals(expected, products.get(1));
     }
 
+
     @Test
     public void shouldAddElement() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         products.add(new Product("test", new BigDecimal("11"), "uk"));
         products.add(new Product("test", new BigDecimal("12"), "uk"));
         Product expected = new Product("test", new BigDecimal("13"), "uk");
@@ -49,13 +59,12 @@ public class ProductArrayListTest {
         Assert.assertEquals(4, products.size());
     }
 
-    @Test
+   @Test
     public void shouldRemoveFirst() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
-        Product expected = new Product("test", new BigDecimal("11"), "uk");
+       ProductArrayList<Product> products =  onceExecutedBeforeAll();
+        Product expected = new Product("test2", new BigDecimal("11"), "uk");
         products.add(expected);
-        products.add(new Product("test", new BigDecimal("12"), "uk"));
+        products.add(new Product("test3", new BigDecimal("12"), "uk"));
         products.remove(0);
         Assert.assertEquals(2, products.size());
         Assert.assertEquals(expected, products.get(0));
@@ -63,8 +72,7 @@ public class ProductArrayListTest {
 
     @Test
     public void shouldRemoveLast() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         Product expected = new Product("test", new BigDecimal("11"), "uk");
         products.add(expected);
         products.add(new Product("test", new BigDecimal("12"), "uk"));
@@ -75,8 +83,7 @@ public class ProductArrayListTest {
 
     @Test
     public void shouldRemoveMiddle() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         Product expected = new Product("test", new BigDecimal("11"), "uk");
         products.add(expected);
         products.add(new Product("test", new BigDecimal("12"), "uk"));
@@ -87,8 +94,7 @@ public class ProductArrayListTest {
 
     @Test
     public void shouldReturnCorrectlyByIndex() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         products.add(new Product("test", new BigDecimal("11"), "uk"));
         Product expected = new Product("test", new BigDecimal("13"), "uk");
         products.add(expected);
@@ -97,8 +103,7 @@ public class ProductArrayListTest {
 
     @Test
     public void shouldRemoveCorrectlyByObject() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         products.add(new Product("test", new BigDecimal("11"), "uk"));
         Product expected = new Product("test", new BigDecimal("13"), "uk");
         products.add(expected);
@@ -108,45 +113,17 @@ public class ProductArrayListTest {
 
     @Test
     public void shouldNotRemoveIfNotObject() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
-        products.add(new Product("test", new BigDecimal("11"), "uk"));
-        products.add(new Product("test", new BigDecimal("13"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
+        products.add(new Product("test2", new BigDecimal("11"), "uk"));
+        products.add(new Product("test3", new BigDecimal("13"), "uk"));
         products.remove(new Product("test", new BigDecimal("15"), "uk"));
         Assert.assertEquals(3, products.size());
         Assert.assertFalse(products.remove(new Product("test", new BigDecimal("15"), "uk")));
     }
 
     @Test
-    public void shouldCorrectlyAddCollection() {
-        ProductArrayList<Product> addingCollection = new ProductArrayList<>();
-        addingCollection.add(new Product("test", new BigDecimal("10"), "uk"));
-        addingCollection.add(new Product("test", new BigDecimal("11"), "uk"));
-        addingCollection.add(new Product("test", new BigDecimal("12"), "uk"));
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.addAll(addingCollection);
-        Assert.assertEquals(addingCollection.toArray(), products.toArray());
-        Assert.assertEquals(3, products.size());
-    }
-
-    @Test
-    public void shouldCorrectlyRemoveCollection() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
-        products.add(new Product("test", new BigDecimal("11"), "uk"));
-        products.add(new Product("test", new BigDecimal("12"), "uk"));
-        ProductArrayList<Product> removingCollection = new ProductArrayList<>();
-        removingCollection.add(new Product("test", new BigDecimal("10"), "uk"));
-        removingCollection.add(new Product("test", new BigDecimal("11"), "uk"));
-        products.removeAll(removingCollection);
-        Assert.assertEquals(new Product("test", new BigDecimal("12"), "uk"), products.get(0));
-        Assert.assertEquals(1, products.size());
-    }
-
-    @Test
     public void shouldCorrectlyRetainCollection() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-        products.add(new Product("test", new BigDecimal("10"), "uk"));
+        ProductArrayList<Product> products =  onceExecutedBeforeAll();
         products.add(new Product("test", new BigDecimal("11"), "uk"));
         products.add(new Product("test", new BigDecimal("12"), "uk"));
         ProductArrayList<Product> retainCollection = new ProductArrayList<>();

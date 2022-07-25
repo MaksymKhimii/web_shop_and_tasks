@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class ComputerPart extends Product{
+
     private String category;
     private String purpose;
 

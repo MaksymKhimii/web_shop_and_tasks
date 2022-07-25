@@ -1,11 +1,14 @@
 package com.epam.khimii.task1.List;
 
 import com.epam.khimii.task1.Entity.Product;
-import com.epam.khimii.task1.Iterator.ProductConditionalIterator;
-import com.epam.khimii.task1.Iterator.ProductIterator;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -24,38 +27,62 @@ import java.util.function.Predicate;
 
 public class ProductArrayList <E extends Product> implements List<E> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int EXTENSION_MULTIPLIER = 2;
     private E[] array;
     private int size;
+    Predicate<E> condition;
+    protected ProductArrayList<E> productArrayList;
+    protected int index;
 
-    public ProductArrayList() {
-        this.array = (E[]) new Product[DEFAULT_CAPACITY];
-        this.size = 0;
+    public ProductArrayList(Predicate<E> condition, int index, ProductArrayList<E> productArrayList) {
+        this.productArrayList = productArrayList;
+        this.index = -1;
+        this.condition = condition;
     }
 
-    public ProductArrayList(Class<E> dataType, int capacity) {
-        this.array = (E[]) Array.newInstance(dataType, capacity);
-        this.size = 0;
+    public ProductArrayList() {
+        array = (E[]) new Product[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
     public void clear() {
-        this.array = (E[]) new Product[DEFAULT_CAPACITY];
-        this.size = 0;
+        array = (E[]) new Product[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
     public E get(int index) {
-        return this.array[index];
+        if(index<=DEFAULT_CAPACITY)
+            return array[index];
+        throw new NoSuchElementException();
     }
 
     @Override
     public E set(int index, E element) {
-        this.array[index] = element;
-        return this.array[index];
+        if(index<=DEFAULT_CAPACITY){
+            array[index] = element;
+            return array[index];
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public void add(int index, E element) {
+      /*  E[] newArray = (E[]) new Object[DEFAULT_CAPACITY];
+        if (size >= array.length) {
+            extensionArray();
+        }
+        for (int i = 0; i < DEFAULT_CAPACITY; i++) {
+            if (index == i) {
+                newArray[i] = element;
+                continue;
+            }
+            newArray[i] = array[i];
+        }
+        array = newArray;
+        size++;*/
+
         if (this.array.length == this.size) {
             E[] newArray = (E[]) new Object[this.array.length * 2];
             System.arraycopy(this.array, 0, newArray, 0, index);
@@ -68,19 +95,32 @@ public class ProductArrayList <E extends Product> implements List<E> {
         ++this.size;
     }
 
+    private void extensionArray() {
+        E[] newArray = (E[]) new Object[array.length * EXTENSION_MULTIPLIER];
+        for (int i = 0; i < newArray.length; i++) {
+            if (i < array.length) {
+                newArray[i] = array[i];
+            }
+            array = (E[]) newArray;
+        }
+    }
+
     @Override
     public E remove(int index) {
-        E temp = this.array[index];
-        System.arraycopy(this.array, index + 1, this.array, index, this.size - index);
-        --this.size;
-        return temp;
+        if(index<=DEFAULT_CAPACITY) {
+            E temp = array[index];
+            System.arraycopy(array, index + 1, array, index, size - index);
+            --size;
+            return temp;
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public boolean remove(Object o) {
-        for (int i = 0; i < this.size; ++i) {
-            if (Objects.equals(this.array[i], o)) {
-                this.remove(i);
+        for (int i = 0; i < size; ++i) {
+            if (Objects.equals(array[i], o)) {
+                remove(i);
                 return true;
             }
         }
@@ -89,8 +129,8 @@ public class ProductArrayList <E extends Product> implements List<E> {
 
     @Override
     public int indexOf(Object o) {
-        for (int i = 0; i < this.size; ++i) {
-            if (Objects.equals(this.array[i], o)) {
+        for (int i = 0; i < size; ++i) {
+            if (Objects.equals(array[i], o)) {
                 return i;
             }
         }
@@ -99,8 +139,8 @@ public class ProductArrayList <E extends Product> implements List<E> {
 
     @Override
     public int lastIndexOf(Object o) {
-        for (int i = this.size - 1; i >= 0; --i) {
-            if (Objects.equals(this.array[i], o)) {
+        for (int i = size - 1; i >= 0; --i) {
+            if (Objects.equals(array[i], o)) {
                 return i;
             }
         }
@@ -124,18 +164,18 @@ public class ProductArrayList <E extends Product> implements List<E> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return indexOf(size)==0;
     }
 
     @Override
     public boolean contains(Object o) {
-        for (int i = 0; i < this.size; ++i) {
-            if (Objects.equals(this.array[i], o)) {
+        for (int i = 0; i < size; ++i) {
+            if (Objects.equals(array[i], o)) {
                 return true;
             }
         }
@@ -144,40 +184,73 @@ public class ProductArrayList <E extends Product> implements List<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new ProductIterator<>(this);
+        return new Iterator<E>() {
+
+
+            @Override
+            public boolean hasNext() {
+                return index < productArrayList.size() - 1;
+            }
+
+            @Override
+            public E next() {
+                if (hasNext()) {
+                    return productArrayList.get(++index);
+                }
+                throw new NoSuchElementException();
+            }
+        };
     }
 
     public Iterator<E> conditionIterator(Predicate<E> predicate) {
-        return new ProductConditionalIterator<>(predicate, this);
+        return new Iterator<E>() {
+            protected ProductArrayList<E> productArrayList;
+            protected int index;
+            Predicate<E> condition;
+
+            public boolean hasNext() {
+                for (int temp = index+1; temp < productArrayList.size(); ++temp) {
+                    if (condition.test((E) productArrayList.toArray()[temp])) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public E next() {
+                while (index + 1 < productArrayList.size()) {
+                    if (condition.test(((E) productArrayList.toArray()[++index]))) {
+                        return ((E) productArrayList.toArray()[index]);
+                    }
+                }
+                throw new NoSuchElementException();
+            }
+        };
     }
 
     @Override
     public Object[] toArray() {
-        return Arrays.copyOf(this.array, this.size);
+        return Arrays.copyOf(array, size);
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        if (a.length < this.size) {
-            return (T[]) Arrays.copyOf(this.array, this.size, a.getClass());
-        } else {
-            System.arraycopy(this.array, 0, a, 0, this.size);
-            if (a.length > this.size) {
-                a[this.size] = null;
-            }
-            return a;
+        if (a.length < size) {
+            return (T[]) Arrays.copyOf(array, size, a.getClass());
         }
+            System.arraycopy(array, 0, a, 0, size);
+            return a;
     }
 
     @Override
     public boolean add(E e) {
-        if (this.size == this.array.length) {
-            E[] newArray = (E[]) new Object[this.array.length * 2];
-            System.arraycopy(this.array, 0, newArray, 0, this.size);
-            newArray[this.size] = e;
-            this.array = newArray;
+        if (size == array.length) {
+            E[] newArray = (E[]) new Object[array.length * EXTENSION_MULTIPLIER];
+            System.arraycopy(array, 0, newArray, 0, size);
+            newArray[size] = e;
+            array = newArray;
         } else {
-            this.array[this.size] = e;
+            array[size] = e;
         }
         ++this.size;
         return true;
@@ -230,11 +303,9 @@ public class ProductArrayList <E extends Product> implements List<E> {
         checkNull(c);
         boolean flag = false;
         for (int i = 0; i < size; i++) {
-            if (!c.contains(array[i])) {
-                if (remove(array[i])) {
+            if ((!c.contains(array[i])) && (remove(array[i]))) {
                     flag = true;
                     i--;
-                }
             }
         }
         return flag;
