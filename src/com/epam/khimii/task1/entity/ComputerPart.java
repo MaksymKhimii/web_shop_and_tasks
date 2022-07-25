@@ -1,9 +1,10 @@
-package com.epam.khimii.task1.Entity;
+package com.epam.khimii.task1.entity;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class ComputerPart extends Product{
+public class ComputerPart extends com.epam.khimii.task1.entity.Product {
+
     private String category;
     private String purpose;
 

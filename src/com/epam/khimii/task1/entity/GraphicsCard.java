@@ -1,10 +1,11 @@
-package com.epam.khimii.task1.Entity;
+package com.epam.khimii.task1.entity;
 
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class GraphicsCard extends ComputerPart{
+public class GraphicsCard extends ComputerPart {
+
     private int memory;
     private String memoryType;
     private String connector;

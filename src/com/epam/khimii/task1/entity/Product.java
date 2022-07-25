@@ -1,8 +1,9 @@
-package com.epam.khimii.task1.Entity;
+package com.epam.khimii.task1.entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
+
     private String name;
     private BigDecimal price;
     private String country;
