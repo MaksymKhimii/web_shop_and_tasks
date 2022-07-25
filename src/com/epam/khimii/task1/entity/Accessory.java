@@ -4,7 +4,7 @@ package com.epam.khimii.task1.entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Accessory extends com.epam.khimii.task1.entity.Product {
+public class Accessory extends Product {
 
     private String type;
     private String brand;

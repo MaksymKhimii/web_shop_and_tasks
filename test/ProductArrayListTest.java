@@ -7,7 +7,13 @@ import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
 
+//for push
+/**
+ * tests for ProductArrayList
+ */
+
 public class ProductArrayListTest {
+
     Product product10, product11, product12, product13  = null;
 
     @Before
