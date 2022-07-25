@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class GraphicsCard extends ComputerPart{
-
     private int memory;
     private String memoryType;
     private String connector;
