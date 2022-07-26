@@ -34,7 +34,6 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     public ProductArrayList() {
         array = (E[]) new Product[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -45,16 +44,17 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public E get(int index) {
-        if (index <= DEFAULT_CAPACITY)
+        if (checkIndex(index))
             return array[index];
         throw new NoSuchElementException();
     }
 
     @Override
     public E set(int index, E element) {
-        if (index <= DEFAULT_CAPACITY) {
+        if (checkIndex(index)) {
+            E prevElement = array[index];
             array[index] = element;
-            return element;
+            return prevElement;
         }
         throw new NoSuchElementException();
     }
@@ -63,7 +63,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
     public void add(int index, E element) {
         if (this.array.length == this.size) {
             @SuppressWarnings("unchecked")
-            E[] newArray = (E[]) new Object[this.array.length * 2];
+            E[] newArray = (E[]) new Object[EXTENSION_MULTIPLIER];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
             this.array = newArray;
@@ -76,7 +76,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public E remove(int index) {
-        if (index <= DEFAULT_CAPACITY) {
+        if (checkIndex(index)) {
             E temp = array[index];
             System.arraycopy(array, index + 1, array, index, size - index);
             --size;
@@ -87,11 +87,9 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        for (int i = 0; i < size; ++i) {
-            if (Objects.equals(array[i], o)) {
-                remove(i);
-                return true;
-            }
+        if (checkIndex(indexOf(o))) {
+            remove(indexOf(o));
+            return true;
         }
         return false;
     }
@@ -104,6 +102,17 @@ public class ProductArrayList<E extends Product> implements List<E> {
             }
         }
         return -1;
+    }
+
+    /**
+     * This method checks whether the input
+     * index is within bounds of the input length:
+     */
+    public boolean checkIndex(int index) {
+        if ((index >= 0) && (index < DEFAULT_CAPACITY)) {
+            return true;
+        }
+        throw new IndexOutOfBoundsException();
     }
 
     @Override
@@ -138,17 +147,12 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return indexOf(size) == 0;
+        return this.size == 0;
     }
 
     @Override
     public boolean contains(Object o) {
-        for (int i = 0; i < size; ++i) {
-            if (Objects.equals(array[i], o)) {
-                return true;
-            }
-        }
-        return false;
+        return indexOf(o) != -1;
     }
 
 
@@ -189,8 +193,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
                 ProductConditionIterator();
     }
 
-    public Iterator<E> iterator(Predicate<E> condition)
-    {
+    public Iterator<E> iterator(Predicate<E> condition) {
         return new ProductConditionIterator(condition);
     }
 

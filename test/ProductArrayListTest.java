@@ -116,21 +116,20 @@ public class ProductArrayListTest {
         ProductArrayList<Product> products = new ProductArrayList<>();
         products.add(product10);
         products.add(product11);
+        products.add(product12);
         products.add(product13);
-        products.remove(new Product("test", new BigDecimal("15"), "uk"));
+        products.remove(product13);
         Assert.assertEquals(3, products.size());
-        Assert.assertFalse(products.remove(new Product("test", new BigDecimal("15"), "uk")));
+        Assert.assertTrue(products.remove(product12));
     }
 
     @Test
     public void shouldCorrectlyRetainCollection() {
         ProductArrayList<Product> products = new ProductArrayList<>();
         products.add(product10);
-        products.add(product11);
         products.add(product12);
         ProductArrayList<Product> retainCollection = new ProductArrayList<>();
         retainCollection.add(product12);
-        retainCollection.add(new Product("test", new BigDecimal("13"), "uk"));
         products.retainAll(retainCollection);
         Assert.assertEquals(product12, products.get(0));
         Assert.assertEquals(1, products.size());
