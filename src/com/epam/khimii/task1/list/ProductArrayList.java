@@ -21,24 +21,16 @@ import java.util.function.Predicate;
  * Has private method for checking object for null, which throw NullPointerException if object is null.
  * Has two iterator. First is simple iterator without some condition.
  * Second iterator with condition, which iterates element, that meets the condition.
- * @see Product, List
+ *
  * @author Maksym Khimii
+ * @see Product, List
  */
 
-public class ProductArrayList <E extends Product> implements List<E> {
+public class ProductArrayList<E extends Product> implements List<E> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int EXTENSION_MULTIPLIER = 2;
     private E[] array;
     private int size;
-    Predicate<E> condition;
-    protected ProductArrayList<E> productArrayList;
-    protected int index;
-
-    public ProductArrayList(Predicate<E> condition, int index, ProductArrayList<E> productArrayList) {
-        this.productArrayList = productArrayList;
-        this.index = -1;
-        this.condition = condition;
-    }
 
     public ProductArrayList() {
         array = (E[]) new Product[DEFAULT_CAPACITY];
@@ -53,23 +45,24 @@ public class ProductArrayList <E extends Product> implements List<E> {
 
     @Override
     public E get(int index) {
-        if(index<=DEFAULT_CAPACITY)
+        if (index <= DEFAULT_CAPACITY)
             return array[index];
         throw new NoSuchElementException();
     }
 
     @Override
     public E set(int index, E element) {
-        if(index<=DEFAULT_CAPACITY){
+        if (index <= DEFAULT_CAPACITY) {
             array[index] = element;
-            return array[index];
+            return element;
         }
         throw new NoSuchElementException();
     }
 
     @Override
     public void add(int index, E element) {
-       if (this.array.length == this.size) {
+        if (this.array.length == this.size) {
+            @SuppressWarnings("unchecked")
             E[] newArray = (E[]) new Object[this.array.length * 2];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
@@ -81,19 +74,9 @@ public class ProductArrayList <E extends Product> implements List<E> {
         ++this.size;
     }
 
-    private void extensionArray() {
-        E[] newArray = (E[]) new Object[array.length * EXTENSION_MULTIPLIER];
-        for (int i = 0; i < newArray.length; i++) {
-            if (i < array.length) {
-                newArray[i] = array[i];
-            }
-            array = (E[]) newArray;
-        }
-    }
-
     @Override
     public E remove(int index) {
-        if(index<=DEFAULT_CAPACITY) {
+        if (index <= DEFAULT_CAPACITY) {
             E temp = array[index];
             System.arraycopy(array, index + 1, array, index, size - index);
             --size;
@@ -155,7 +138,7 @@ public class ProductArrayList <E extends Product> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return indexOf(size)==0;
+        return indexOf(size) == 0;
     }
 
     @Override
@@ -168,49 +151,47 @@ public class ProductArrayList <E extends Product> implements List<E> {
         return false;
     }
 
-    @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
 
-            @Override
-            public boolean hasNext() {
-                return index < productArrayList.size() - 1;
-            }
+    private class ProductConditionIterator<E extends Product> implements Iterator<E> {
+        private Predicate<E> condition;
+        private int index;
 
-            @Override
-            public E next() {
-                if (hasNext()) {
-                    return productArrayList.get(++index);
+        public ProductConditionIterator() {
+            this.condition = condition -> true;
+        }
+
+        public ProductConditionIterator(Predicate<E> condition) {
+            this.condition = condition;
+        }
+
+        public boolean hasNext() {
+            for (int temp = this.index + 1; temp < array.length; ++temp) {
+                if (this.condition.test((E) array[temp])) {
+                    return true;
                 }
-                throw new NoSuchElementException();
             }
-        };
+            return false;
+        }
+
+        public E next() {
+            while (this.index + 1 < array.length) {
+                if (this.condition.test(((E) array[++index]))) {
+                    return ((E) array[index]);
+                }
+            }
+            throw new NoSuchElementException();
+        }
     }
 
-    public Iterator<E> conditionIterator(Predicate<E> predicate) {
-        return new Iterator<E>() {
-            protected ProductArrayList<E> productArrayList;
-            protected int index;
-            Predicate<E> condition;
+    @Override
+    public Iterator<E> iterator() {
+        return new
+                ProductConditionIterator();
+    }
 
-            public boolean hasNext() {
-                for (int temp = index+1; temp < productArrayList.size(); ++temp) {
-                    if (condition.test((E) productArrayList.toArray()[temp])) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            public E next() {
-                while (index + 1 < productArrayList.size()) {
-                    if (condition.test(((E) productArrayList.toArray()[++index]))) {
-                        return ((E) productArrayList.toArray()[index]);
-                    }
-                }
-                throw new NoSuchElementException();
-            }
-        };
+    public Iterator<E> iterator(Predicate<E> condition)
+    {
+        return new ProductConditionIterator(condition);
     }
 
     @Override
