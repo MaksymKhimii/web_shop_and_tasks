@@ -63,7 +63,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
     public void add(int index, E element) {
         if (this.array.length == this.size) {
             @SuppressWarnings("unchecked")
-            E[] newArray = (E[]) new Object[EXTENSION_MULTIPLIER];
+            E[] newArray = (E[]) new Object[this.array.length*EXTENSION_MULTIPLIER];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
             this.array = newArray;
