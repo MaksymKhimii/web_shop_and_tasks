@@ -1,4 +1,4 @@
-package com.epam.khimii.task1.list;
+package com.epam.khimii.task2.list;
 
 import com.epam.khimii.task1.entity.Product;
 
@@ -11,28 +11,18 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-/**
- * A resizable array-based interface implementation.
- * Has a capacity that expands when the size of the collection reaches it.
- * The default capacity is 10 cells. Is a generic for the product class and its descendants.
- * Contains basic methods for working with a list: get,clear, set, add, remove, indexOf, contains.
- * listIterator and sublist are unsupported.
- * Has methods for addition, removing and retain collection.
- * Has private method for checking object for null, which throw NullPointerException if object is null.
- * Has two iterator. First is simple iterator without some condition.
- * Second iterator with condition, which iterates element, that meets the condition.
- *
- * @author Maksym Khimii
- * @see Product, List
- */
+public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
-public class ProductArrayList<E extends Product> implements List<E> {
     private static final int DEFAULT_CAPACITY = 16;
     private static final int EXTENSION_MULTIPLIER = 2;
     private E[] array;
     private int size;
 
-    public ProductArrayList() {
+    public CopyOnWriteArrayList(int unmodifiedElements) {
+        array = (E[]) new Product[unmodifiedElements];
+    }
+
+    public CopyOnWriteArrayList() {
         array = (E[]) new Product[DEFAULT_CAPACITY];
     }
 
@@ -76,6 +66,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public E remove(int index) {
+
         if (checkIndex(index)) {
             E temp = array[index];
             System.arraycopy(array, index + 1, array, index, size - index);
@@ -99,12 +90,13 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public int indexOf(Object o) {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; ++i) {
             if (Objects.equals(array[i], o)) {
                 return i;
             }
         }
-        return -1;
+        throw new IndexOutOfBoundsException();
+        //return -1;
     }
 
     /**
@@ -150,7 +142,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return this.size > 0;
     }
 
     @Override
@@ -159,8 +151,48 @@ public class ProductArrayList<E extends Product> implements List<E> {
     }
 
 
-    private class NewIterator<E extends Product> implements Iterator<E> {
+    private class ProductConditionIterator<E extends Product> implements Iterator<E> {
+        private Predicate<E> condition;
+        private int index;
+
+        public ProductConditionIterator() {
+            this.condition = condition -> true;
+        }
+
+        public ProductConditionIterator(Predicate<E> condition) {
+            this.condition = condition;
+        }
+
+        public boolean hasNext() {
+            for (int temp = this.index + 1; temp < array.length; ++temp) {
+                if (this.condition.test((E) array[temp])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public E next() {
+            while (this.index + 1 < array.length) {
+                if (this.condition.test(((E) array[++index]))) {
+                    return ((E) array[index]);
+                }
+            }
+            throw new NoSuchElementException();
+        }
+    }
+
+
+    private E[] ArrayCopy() {
+        @SuppressWarnings("unchecked")
+        E[] copy = (E[]) new Product[array.length];
+        System.arraycopy(array, 0, copy, 0, array.length);
+        return copy;
+    }
+
+    private class CopyOnWriteIterator<E extends Product> implements Iterator<E> {
         private int cursor = 0;
+        private final E[] snapshot = (E[]) ArrayCopy();
         private final int snapshotSize = size;
 
         public boolean hasNext() {
@@ -172,13 +204,17 @@ public class ProductArrayList<E extends Product> implements List<E> {
             if (cursor >= snapshotSize) {
                 throw new NoSuchElementException();
             }
-            return (E) array[cursor++];
+            return (E) snapshot[cursor++];
         }
     }
 
     @Override
     public Iterator<E> iterator() {
-        return new NewIterator();
+        return new CopyOnWriteIterator();
+    }
+
+    public Iterator<E> iterator(Predicate<E> condition) {
+        return new ProductConditionIterator(condition);
     }
 
     @Override
@@ -197,21 +233,30 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean add(E e) {
-        if (size == array.length) {
-            E[] newArray = (E[]) new Product[array.length + 1];
-            System.arraycopy(array, 0, newArray, 0, size);
-            newArray[size] = e;
-            array = newArray;
-        } else {
-            array[size] = e;
+
+        E[] basketCopy = array.clone();
+        if (size >= array.length) {
+            extensionArray();
         }
+        basketCopy[size] = e;
         size++;
+        array = basketCopy;
         return true;
     }
 
+    private void extensionArray() {
+        Product[] products = new Product[size * EXTENSION_MULTIPLIER];
+        for (int i = 0; i < products.length; i++) {
+            if (i < array.length) {
+                products[i] = array[i];
+            }
+            array = (E[]) products;
+        }
+    }
 
     @Override
     public boolean containsAll(Collection<?> c) {
+        checkNull(c);
         for (Object temp : c) {
             if (!contains(temp)) {
                 return false;
@@ -222,9 +267,9 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        checkNull(c);
-        for (E temp : c) {
-            add(temp);
+        for (E item : c) {
+            E productItem = item;
+            add(productItem);
         }
         return true;
     }
@@ -241,13 +286,13 @@ public class ProductArrayList<E extends Product> implements List<E> {
     @Override
     public boolean removeAll(Collection<?> c) {
         checkNull(c);
-        boolean flag = false;
-        for (Object temp : c) {
-            if (remove(temp)) {
-                flag = true;
+        for (Object item : c) {
+            if (contains(item)) {
+                remove(indexOf(item));
             }
         }
-        return flag;
+
+        return false;
     }
 
     @Override
@@ -269,4 +314,3 @@ public class ProductArrayList<E extends Product> implements List<E> {
         }
     }
 }
-
