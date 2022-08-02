@@ -13,9 +13,8 @@ import java.util.NoSuchElementException;
 
 public class SemiModifiedList<E extends Product> implements List<E> {
 
-    ProductArrayList<E> mutable;
-    ProductArrayList<E> immutable;
-    private int immutableIndex;
+    private ProductArrayList<E> mutable;
+    private ProductArrayList<E> immutable;
 
 
     public SemiModifiedList() {
@@ -24,7 +23,6 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     public SemiModifiedList(ProductArrayList<E> immutable, ProductArrayList<E> mutable) {
         this.immutable = immutable;
-        immutableIndex = immutable.size();
         this.mutable = mutable;
     }
 
@@ -35,17 +33,39 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return immutable.isEmpty() && mutable.isEmpty();
+        return size() == 0;
     }
 
     @Override
     public boolean contains(Object o) {
-        return immutable.contains(o) || mutable.contains(o);
+        return indexOf(o) != -1;
+    }
+
+
+    private class NewIterator<E extends Product> implements Iterator<E> {
+
+        private int cursor = 0;
+
+        @Override
+        public boolean hasNext() {
+            return cursor < size();
+        }
+
+        @Override
+        public E next() {
+            if (hasNext()) {
+                if (cursor < immutable.size()) {
+                    return (E) immutable.get(cursor++);
+                }
+                return (E) mutable.get(cursor++ - immutable.size());
+            }
+            throw new NoSuchElementException();
+        }
     }
 
     @Override
     public Iterator<E> iterator() {
-        return mutable.iterator();
+        return new NewIterator();
     }
 
 
@@ -63,30 +83,20 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public boolean add(E e) {
-        if (e != null) {
-            return mutable.add(e);
-        } else {
-            throw new UnsupportedOperationException();
-        }
-
+        return mutable.add(e);
     }
 
     @Override
     public boolean remove(Object o) {
-        if (mutable.contains(o)) {
-            remove(indexOf(o));
-            return true;
-        }
-        throw new UnsupportedOperationException();
+        isMutable(indexOf(o));
+        mutable.remove(o);
+        return true;
     }
 
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        if (c != null) {
-            return immutable.containsAll(c) || mutable.containsAll(c);
-        }
-        return false;
+        return immutable.containsAll(c) || mutable.containsAll(c);
     }
 
 
@@ -97,94 +107,55 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        if (IsMutable(index)) {
-            return mutable.addAll(index - mutable.size(), c);
-        }
-        throw new UnsupportedOperationException();
+        isMutable(index);
+        return mutable.addAll(index - mutable.size(), c);
     }
-
 
     @Override
     public boolean removeAll(Collection<?> c) {
         for (Object item : c) {
+            isMutable(indexOf(c));
             remove(item);
         }
         return true;
     }
 
-
     @Override
     public boolean retainAll(Collection<?> c) {
         return mutable.retainAll(c);
-
     }
-
 
     @Override
     public void clear() {
         mutable.clear();
     }
 
-
     @Override
     public E get(int index) {
-        if (index <= size()) {
-            if (index < immutable.size()) {
-                int count = 0;
-                for (E p : immutable) {
-                    if (count == index) {
-                        return p;
-                    }
-                    count++;
-                }
-            } else {
-                int count = immutable.size();
-                for (E p : mutable) {
-                    if (count == index) {
-                        return p;
-                    }
-                    count++;
-                }
-            }
+        if (index < immutable.size()) {
+            return immutable.get(index);
+        } else {
+            return mutable.get(index);
         }
-        throw new NoSuchElementException();
     }
 
     @Override
     public E set(int index, E element) {
-        int NewIndex;
-        if (IsMutable(index)) {
-            if (index == immutable.size()) {
-                System.out.println("aslml: " + immutable.size());
-                mutable.set(0, element);
-            } else {
-                NewIndex = immutable.size() + index - 2;
-                System.out.println("NewIndex:" + NewIndex);
-                mutable.set(NewIndex, element);
-            }
-            return element;
-        }
-        throw new UnsupportedOperationException();
+        isMutable(index);
+        return mutable.set(index, element);
     }
-
 
     @Override
     public void add(int index, E element) {
-        if (IsMutable(index)) {
-            mutable.add(index - immutable.size(), element);
-            return;
-        }
-        throw new UnsupportedOperationException();
+        isMutable(index);
+        mutable.add(index - immutable.size(), element);
     }
 
     @Override
     public E remove(int index) {
-        if ((IsMutable(index))) {
-            return mutable.remove(index - immutable.size());
-        }
-        throw new UnsupportedOperationException();
+        isMutable(index);
+        return mutable.remove(index - immutable.size());
     }
-
 
     @Override
     public int indexOf(Object o) {
@@ -202,57 +173,27 @@ public class SemiModifiedList<E extends Product> implements List<E> {
         if (mutable.contains(o)) {
             return mutable.lastIndexOf(o) + immutable.size();
         }
-        if (immutable.contains(o)) {
-            return immutable.lastIndexOf(o);
-        }
         return -1;
     }
-
 
     @Override
     public ListIterator<E> listIterator() {
         throw new UnsupportedOperationException();
     }
 
-
     @Override
     public ListIterator<E> listIterator(int index) {
         throw new UnsupportedOperationException();
     }
 
-
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
-        List<E> list = new ProductArrayList<>();
-        if (!IsMutable(fromIndex) && !IsMutable(toIndex)) {
-            while (fromIndex <= toIndex) {
-                list.add(immutable.get(fromIndex));
-                fromIndex++;
-            }
-            return list;
-        }
-        if (IsMutable(fromIndex) && IsMutable(toIndex)) {
-            while (fromIndex <= toIndex) {
-                list.add(mutable.get(fromIndex));
-                fromIndex++;
-            }
-            return list;
-        }
-
-        while (fromIndex <= immutable.size()) {
-            list.add(immutable.get(fromIndex));
-            fromIndex++;
-        }
-        while (fromIndex <= toIndex) {
-            list.add(mutable.get(fromIndex));
-            fromIndex++;
-        }
-        return list;
-
+        throw new UnsupportedOperationException();
     }
 
-    public boolean IsMutable(int index) {
-        return (index < 0) || (index >= immutable.size());
+    public void isMutable(int index) {
+        if ((index < 0) || (index >= immutable.size())) {
+            throw new IllegalArgumentException();
+        }
     }
-
 }

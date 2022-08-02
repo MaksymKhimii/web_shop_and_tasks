@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.function.Predicate;
+
 
 public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
@@ -18,8 +18,8 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
     private E[] array;
     private int size;
 
-    public CopyOnWriteArrayList(int unmodifiedElements) {
-        array = (E[]) new Product[unmodifiedElements];
+    public CopyOnWriteArrayList(int immutableCount) {
+        array = (E[]) new Product[immutableCount];
     }
 
     public CopyOnWriteArrayList() {
@@ -42,8 +42,9 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
     @Override
     public E set(int index, E element) {
         if (checkIndex(index)) {
-            E prevElement = array[index];
-            array[index] = element;
+            E[] copy = ArrayCopy();
+            E prevElement = copy[index];
+            copy[index] = element;
             return prevElement;
         }
         throw new NoSuchElementException();
@@ -51,25 +52,26 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
     @Override
     public void add(int index, E element) {
-        if (this.array.length == this.size) {
+        E[] copy = ArrayCopy();
+        if (copy.length == size) {
             @SuppressWarnings("unchecked")
-            E[] newArray = (E[]) new Object[array.length * EXTENSION_MULTIPLIER];
-            System.arraycopy(this.array, 0, newArray, 0, index);
-            System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
-            this.array = newArray;
+            E[] newArray = (E[]) new Object[copy.length * EXTENSION_MULTIPLIER];
+            System.arraycopy(copy, 0, newArray, 0, index);
+            System.arraycopy(copy, index, newArray, index + 1, size - index);
+            copy = newArray;
         } else {
-            System.arraycopy(this.array, index, this.array, index + 1, this.size - index);
+            System.arraycopy(copy, index, copy, index + 1, size - index);
         }
-        this.array[index] = element;
-        ++this.size;
+        copy[index] = element;
+        ++size;
     }
 
     @Override
     public E remove(int index) {
-
+        E[] copy = ArrayCopy();
         if (checkIndex(index)) {
-            E temp = array[index];
-            System.arraycopy(array, index + 1, array, index, size - index);
+            E temp = copy[index];
+            System.arraycopy(copy, index + 1, copy, index, size - index);
             --size;
             return temp;
         }
@@ -78,14 +80,17 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        if ((array.length == 0) || checkIndex(indexOf(o))) {
+        E[] copy = ArrayCopy();
+        if (indexOf(o) != -1) {
+
+
+            E[] products = (E[]) new Product[copy.length];
+            System.arraycopy(copy, 0, products, 0, indexOf(o) - 1);
+            System.arraycopy(copy, indexOf(o) + 1, products, indexOf(o), copy.length - indexOf(o) - 2);
+            copy = products;
             return true;
         }
-        E[] products = (E[]) new Product[array.length];
-        System.arraycopy(array, 0, products, 0, indexOf(o) - 1);
-        System.arraycopy(array, indexOf(o) + 1, products, indexOf(o), array.length - indexOf(o) - 2);
-        array = products;
-        return true;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -96,7 +101,6 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
             }
         }
         throw new IndexOutOfBoundsException();
-        //return -1;
     }
 
     /**
@@ -142,46 +146,13 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return this.size > 0;
+        return size > 0;
     }
 
     @Override
     public boolean contains(Object o) {
         return indexOf(o) != -1;
     }
-
-
-    private class ProductConditionIterator<E extends Product> implements Iterator<E> {
-        private Predicate<E> condition;
-        private int index;
-
-        public ProductConditionIterator() {
-            this.condition = condition -> true;
-        }
-
-        public ProductConditionIterator(Predicate<E> condition) {
-            this.condition = condition;
-        }
-
-        public boolean hasNext() {
-            for (int temp = this.index + 1; temp < array.length; ++temp) {
-                if (this.condition.test((E) array[temp])) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public E next() {
-            while (this.index + 1 < array.length) {
-                if (this.condition.test(((E) array[++index]))) {
-                    return ((E) array[index]);
-                }
-            }
-            throw new NoSuchElementException();
-        }
-    }
-
 
     private E[] ArrayCopy() {
         @SuppressWarnings("unchecked")
@@ -211,10 +182,6 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
     @Override
     public Iterator<E> iterator() {
         return new CopyOnWriteIterator();
-    }
-
-    public Iterator<E> iterator(Predicate<E> condition) {
-        return new ProductConditionIterator(condition);
     }
 
     @Override
