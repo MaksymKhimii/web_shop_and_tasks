@@ -12,7 +12,6 @@ import java.util.Objects;
 
 
 public class CopyOnWriteArrayList<E extends Product> implements List<E> {
-
     private static final int DEFAULT_CAPACITY = 16;
     private static final int EXTENSION_MULTIPLIER = 2;
     private E[] array;
@@ -34,63 +33,59 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
     @Override
     public E get(int index) {
-        if (checkIndex(index))
-            return array[index];
-        throw new NoSuchElementException();
+        checkIndex(index);
+        createArrayCopy();
+        return array[index];
     }
 
     @Override
     public E set(int index, E element) {
-        if (checkIndex(index)) {
-            E[] copy = ArrayCopy();
-            E prevElement = copy[index];
-            copy[index] = element;
-            return prevElement;
-        }
-        throw new NoSuchElementException();
+        checkIndex(index);
+        createArrayCopy();
+        E prevElement = array[index];
+        array[index] = element;
+        return prevElement;
     }
 
     @Override
     public void add(int index, E element) {
-        E[] copy = ArrayCopy();
-        if (copy.length == size) {
+        checkIndex(index);
+        createArrayCopy();
+
+        if (array.length == size) {
             @SuppressWarnings("unchecked")
-            E[] newArray = (E[]) new Object[copy.length * EXTENSION_MULTIPLIER];
-            System.arraycopy(copy, 0, newArray, 0, index);
-            System.arraycopy(copy, index, newArray, index + 1, size - index);
-            copy = newArray;
+            E[] newArray = (E[]) new Object[array.length * EXTENSION_MULTIPLIER];
+            System.arraycopy(array, 0, newArray, 0, index);
+            System.arraycopy(array, index, newArray, index + 1, size - index);
+            array = newArray;
         } else {
-            System.arraycopy(copy, index, copy, index + 1, size - index);
+            System.arraycopy(array, index, array, index + 1, size - index);
         }
-        copy[index] = element;
+        array[index] = element;
         ++size;
     }
 
     @Override
     public E remove(int index) {
-        E[] copy = ArrayCopy();
-        if (checkIndex(index)) {
-            E temp = copy[index];
-            System.arraycopy(copy, index + 1, copy, index, size - index);
-            --size;
-            return temp;
-        }
-        throw new NoSuchElementException();
+        checkIndex(index);
+        createArrayCopy();
+        E temp = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index);
+        --size;
+        return temp;
     }
 
     @Override
     public boolean remove(Object o) {
-        E[] copy = ArrayCopy();
+        createArrayCopy();
         if (indexOf(o) != -1) {
-
-
-            E[] products = (E[]) new Product[copy.length];
-            System.arraycopy(copy, 0, products, 0, indexOf(o) - 1);
-            System.arraycopy(copy, indexOf(o) + 1, products, indexOf(o), copy.length - indexOf(o) - 2);
-            copy = products;
+            E[] products = (E[]) new Product[array.length];
+            System.arraycopy(array, 0, products, 0, indexOf(o) - 1);
+            System.arraycopy(array, indexOf(o) + 1, products, indexOf(o), array.length - indexOf(o) - 2);
+            array = products;
             return true;
         }
-        throw new NoSuchElementException();
+        return false;
     }
 
     @Override
@@ -103,15 +98,9 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
         throw new IndexOutOfBoundsException();
     }
 
-    /**
-     * This method checks whether the input
-     * index is within bounds of the input length:
-     */
-    public boolean checkIndex(int index) {
-        if ((index >= 0) && (index < DEFAULT_CAPACITY)) {
-            return true;
-        }
-        throw new IndexOutOfBoundsException();
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size())
+            throw new IndexOutOfBoundsException();
     }
 
     @Override
@@ -154,16 +143,13 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
         return indexOf(o) != -1;
     }
 
-    private E[] ArrayCopy() {
-        @SuppressWarnings("unchecked")
-        E[] copy = (E[]) new Product[array.length];
-        System.arraycopy(array, 0, copy, 0, array.length);
-        return copy;
+    private void createArrayCopy() {
+        array = Arrays.copyOf(array, array.length);
     }
 
-    private class CopyOnWriteIterator<E extends Product> implements Iterator<E> {
+    private class CopyOnWriteIterator implements Iterator<E> {
         private int cursor = 0;
-        private final E[] snapshot = (E[]) ArrayCopy();
+        private final E[] snapshot = array;
         private final int snapshotSize = size;
 
         public boolean hasNext() {
@@ -200,7 +186,6 @@ public class CopyOnWriteArrayList<E extends Product> implements List<E> {
 
     @Override
     public boolean add(E e) {
-
         E[] basketCopy = array.clone();
         if (size >= array.length) {
             extensionArray();

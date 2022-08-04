@@ -8,17 +8,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.NoSuchElementException;
 
 
 public class SemiModifiedList<E extends Product> implements List<E> {
-
     private ProductArrayList<E> mutable;
     private ProductArrayList<E> immutable;
 
-
     public SemiModifiedList() {
-        mutable = new ProductArrayList<>();
+        this.mutable = new ProductArrayList<>();
+        this.immutable = new ProductArrayList<>();
     }
 
     public SemiModifiedList(ProductArrayList<E> immutable, ProductArrayList<E> mutable) {
@@ -41,25 +39,24 @@ public class SemiModifiedList<E extends Product> implements List<E> {
         return indexOf(o) != -1;
     }
 
-
-    private class NewIterator<E extends Product> implements Iterator<E> {
-
-        private int cursor = 0;
+    private class NewIterator implements Iterator<E> {
+        private final Iterator<E> immutableIterator = immutable.iterator();
+        private final Iterator<E> mutableIterator = mutable.iterator();
 
         @Override
         public boolean hasNext() {
-            return cursor < size();
+            if (!immutableIterator.hasNext()) {
+                return mutableIterator.hasNext();
+            }
+            return true;
         }
 
         @Override
         public E next() {
-            if (hasNext()) {
-                if (cursor < immutable.size()) {
-                    return (E) immutable.get(cursor++);
-                }
-                return (E) mutable.get(cursor++ - immutable.size());
+            if (!immutableIterator.hasNext()) {
+                return mutableIterator.next();
             }
-            throw new NoSuchElementException();
+            return immutableIterator.next();
         }
     }
 
@@ -68,18 +65,15 @@ public class SemiModifiedList<E extends Product> implements List<E> {
         return new NewIterator();
     }
 
-
     @Override
     public Object[] toArray() {
         return new Object[size()];
     }
 
-
     @Override
     public <T> T[] toArray(T[] a) {
         return (T[]) Arrays.stream(a).toArray();
     }
-
 
     @Override
     public boolean add(E e) {
@@ -88,17 +82,19 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        isMutable(indexOf(o));
-        mutable.remove(o);
-        return true;
+        checkImmutableIndex(indexOf(o));
+        return mutable.remove(o);
     }
-
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return immutable.containsAll(c) || mutable.containsAll(c);
+        for (Object object : c) {
+            if (!immutable.contains(object) && !mutable.contains(object)) {
+                return false;
+            }
+        }
+        return true;
     }
-
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
@@ -107,21 +103,23 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        isMutable(index);
-        return mutable.addAll(index - mutable.size(), c);
+        checkImmutableIndex(index);
+        return mutable.addAll(index - immutable.size(), c);
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        for (Object item : c) {
-            isMutable(indexOf(c));
-            remove(item);
+        for (Object object : c) {
+            checkImmutableIndex(indexOf(object));
         }
-        return true;
+        return mutable.removeAll(c);
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
+        for (Object object : c) {
+            checkImmutableIndex(indexOf(object));
+        }
         return mutable.retainAll(c);
     }
 
@@ -132,46 +130,50 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public E get(int index) {
+        checkImmutableIndex(index);
         if (index < immutable.size()) {
             return immutable.get(index);
-        } else {
-            return mutable.get(index);
         }
+        return mutable.get(index);
     }
 
     @Override
     public E set(int index, E element) {
-        isMutable(index);
+        checkImmutableIndex(index);
         return mutable.set(index, element);
     }
 
     @Override
     public void add(int index, E element) {
-        isMutable(index);
+        checkImmutableIndex(index);
         mutable.add(index - immutable.size(), element);
     }
 
     @Override
     public E remove(int index) {
-        isMutable(index);
+        checkImmutableIndex(index);
         return mutable.remove(index - immutable.size());
     }
 
     @Override
-    public int indexOf(Object o) {
-        if (immutable.contains(o)) {
-            return immutable.indexOf(o);
+    public int indexOf(Object object) {
+        if (immutable.contains(object)) {
+            return immutable.indexOf(object);
         }
-        if (mutable.contains(o)) {
-            return mutable.indexOf(o) + immutable.size();
+        if (mutable.contains(object)) {
+            return mutable.indexOf(object) + immutable.size();
         }
         return -1;
     }
 
     @Override
-    public int lastIndexOf(Object o) {
-        if (mutable.contains(o)) {
-            return mutable.lastIndexOf(o) + immutable.size();
+    public int lastIndexOf(Object object) {
+        checkImmutableIndex(indexOf(object));
+        if (mutable.contains(object)) {
+            return mutable.lastIndexOf(object) + immutable.size();
+        }
+        if (immutable.contains(object)) {
+            return immutable.lastIndexOf(object);
         }
         return -1;
     }
@@ -191,9 +193,8 @@ public class SemiModifiedList<E extends Product> implements List<E> {
         throw new UnsupportedOperationException();
     }
 
-    public void isMutable(int index) {
-        if ((index < 0) || (index >= immutable.size())) {
+    public void checkImmutableIndex(int index) {
+        if (index < immutable.size())
             throw new IllegalArgumentException();
-        }
     }
 }

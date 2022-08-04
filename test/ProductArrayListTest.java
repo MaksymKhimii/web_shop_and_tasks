@@ -4,11 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 
-
-
 import java.math.BigDecimal;
-
-
 
 public class ProductArrayListTest {
 
@@ -25,36 +21,44 @@ public class ProductArrayListTest {
     @Test
     public void shouldAddToStart() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(0, product10);
         products.add(0, product11);
+
         Assert.assertEquals(product11, products.get(0));
     }
 
     @Test
     public void shouldAddToEnd() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(0, product10);
         products.add(products.size(), product11);
+
         Assert.assertEquals(product11, products.get(products.size() - 1));
     }
 
     @Test
     public void shouldAddToMiddle() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(0, product10);
         products.add(0, product11);
         products.add(0, product12);
         products.add(1, product13);
+
         Assert.assertEquals(product13, products.get(1));
     }
 
     @Test
     public void shouldAddElement() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product11);
         products.add(product12);
         products.add(product13);
+
         Assert.assertEquals(product13, products.get(3));
         Assert.assertEquals(4, products.size());
     }
@@ -62,10 +66,12 @@ public class ProductArrayListTest {
     @Test
     public void shouldRemoveFirst() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product11);
         products.add(product12);
         products.remove(0);
+
         Assert.assertEquals(2, products.size());
         Assert.assertEquals(product11, products.get(0));
     }
@@ -73,10 +79,12 @@ public class ProductArrayListTest {
     @Test
     public void shouldRemoveLast() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product11);
         products.add(product12);
         products.remove(products.size() - 1);
+
         Assert.assertEquals(2, products.size());
         Assert.assertEquals(product11, products.get(products.size() - 1));
     }
@@ -84,10 +92,12 @@ public class ProductArrayListTest {
     @Test
     public void shouldRemoveMiddle() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product12);
         products.add(product12);
         products.remove(1);
+
         Assert.assertEquals(2, products.size());
         Assert.assertEquals(product12, products.get(1));
     }
@@ -95,30 +105,36 @@ public class ProductArrayListTest {
     @Test
     public void shouldReturnCorrectlyByIndex() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product11);
         products.add(product13);
+
         Assert.assertEquals(product13, products.get(2));
     }
 
     @Test
     public void shouldRemoveCorrectlyByObject() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product11);
         products.add(product13);
         products.remove(product13);
+
         Assert.assertEquals(2, products.size());
     }
 
     @Test
     public void shouldNotRemoveIfNotObject() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product11);
         products.add(product12);
         products.add(product13);
         products.remove(product13);
+
         Assert.assertEquals(3, products.size());
         Assert.assertTrue(products.remove(product12));
     }
@@ -126,11 +142,13 @@ public class ProductArrayListTest {
     @Test
     public void shouldCorrectlyRetainCollection() {
         ProductArrayList<Product> products = new ProductArrayList<>();
+
         products.add(product10);
         products.add(product12);
         ProductArrayList<Product> retainCollection = new ProductArrayList<>();
         retainCollection.add(product12);
         products.retainAll(retainCollection);
+
         Assert.assertEquals(product12, products.get(0));
         Assert.assertEquals(1, products.size());
     }
