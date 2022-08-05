@@ -130,7 +130,6 @@ public class SemiModifiedList<E extends Product> implements List<E> {
 
     @Override
     public E get(int index) {
-        checkImmutableIndex(index);
         if (index < immutable.size()) {
             return immutable.get(index);
         }
