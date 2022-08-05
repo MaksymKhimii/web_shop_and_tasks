@@ -1,22 +1,48 @@
 import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task1.list.ProductArrayList;
+import com.epam.khimii.task2.list.CopyOnWriteArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 
 import java.math.BigDecimal;
 
-public class ProductArrayListTest {
+public class CopyOnWriteArrayListTest {
 
     Product product10, product11, product12, product13 = null;
 
     @Before
     public void beforeTest() {
-        product10 = new Product("test", new BigDecimal("10"), "uk");
-        product11 = new Product("test", new BigDecimal("11"), "uk");
-        product12 = new Product("test", new BigDecimal("12"), "uk");
-        product13 = new Product("test", new BigDecimal("13"), "uk");
+        product10 = new Product("test10", new BigDecimal("10"), "uk");
+        product11 = new Product("test11", new BigDecimal("11"), "uk");
+        product12 = new Product("test12", new BigDecimal("12"), "uk");
+        product13 = new Product("test13", new BigDecimal("13"), "uk");
     }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void shouldNotRemoveIterate() {
+        CopyOnWriteArrayList<Product> products = new CopyOnWriteArrayList<>();
+
+        products.add(product10);
+        products.add(product11);
+        products.add(product12);
+        for (Product product : products) {
+            products.remove(product);
+        }
+    }
+
+    @Test
+    public void shouldNotRemove() {
+        ProductArrayList<Product> products = new ProductArrayList<>();
+
+        products.add(product10);
+        products.add(product11);
+        products.add(product12);
+        products.remove(0);
+
+        Assert.assertEquals(product12, products.get(1));
+    }
+
 
     @Test
     public void shouldAddToStart() {
@@ -123,33 +149,5 @@ public class ProductArrayListTest {
         products.remove(product13);
 
         Assert.assertEquals(2, products.size());
-    }
-
-    @Test
-    public void shouldNotRemoveIfNotObject() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-
-        products.add(product10);
-        products.add(product11);
-        products.add(product12);
-        products.add(product13);
-        products.remove(product13);
-
-        Assert.assertEquals(3, products.size());
-        Assert.assertTrue(products.remove(product12));
-    }
-
-    @Test
-    public void shouldCorrectlyRetainCollection() {
-        ProductArrayList<Product> products = new ProductArrayList<>();
-
-        products.add(product10);
-        products.add(product12);
-        ProductArrayList<Product> retainCollection = new ProductArrayList<>();
-        retainCollection.add(product12);
-        products.retainAll(retainCollection);
-
-        Assert.assertEquals(product12, products.get(0));
-        Assert.assertEquals(1, products.size());
     }
 }

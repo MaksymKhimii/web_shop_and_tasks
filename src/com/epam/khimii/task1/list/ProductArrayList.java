@@ -25,7 +25,6 @@ import java.util.function.Predicate;
  * @author Maksym Khimii
  * @see Product, List
  */
-
 public class ProductArrayList<E extends Product> implements List<E> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int EXTENSION_MULTIPLIER = 2;
@@ -63,7 +62,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
     public void add(int index, E element) {
         if (this.array.length == this.size) {
             @SuppressWarnings("unchecked")
-            E[] newArray = (E[]) new Object[this.array.length*EXTENSION_MULTIPLIER];
+            E[] newArray = (E[]) new Object[this.array.length * EXTENSION_MULTIPLIER];
             System.arraycopy(this.array, 0, newArray, 0, index);
             System.arraycopy(this.array, index, newArray, index + 1, this.size - index);
             this.array = newArray;
@@ -104,10 +103,6 @@ public class ProductArrayList<E extends Product> implements List<E> {
         return -1;
     }
 
-    /**
-     * This method checks whether the input
-     * index is within bounds of the input length:
-     */
     public boolean checkIndex(int index) {
         if ((index >= 0) && (index < DEFAULT_CAPACITY)) {
             return true;
@@ -155,7 +150,6 @@ public class ProductArrayList<E extends Product> implements List<E> {
         return indexOf(o) != -1;
     }
 
-
     private class ProductConditionIterator<E extends Product> implements Iterator<E> {
         private Predicate<E> condition;
         private int index;
@@ -189,8 +183,7 @@ public class ProductArrayList<E extends Product> implements List<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new
-                ProductConditionIterator();
+        return new ProductConditionIterator();
     }
 
     public Iterator<E> iterator(Predicate<E> condition) {
@@ -224,7 +217,6 @@ public class ProductArrayList<E extends Product> implements List<E> {
         ++this.size;
         return true;
     }
-
 
     @Override
     public boolean containsAll(Collection<?> c) {
