@@ -20,10 +20,10 @@ public class HashCodeWrappersTest {
 
     @Before
     public void BeforeTest() {
-        name10 = "Product10";
-        name11 = "Product11";
-        name12 = "Product12";
-        name13 = "Product13";
+        name10 = "banana10";
+        name11 = "apple";
+        name12 = "avocado";
+        name13 = "blueberry";
         product10 = new Product("test10", new BigDecimal("10"), "uk");
         product11 = new Product("test11", new BigDecimal("11"), "uk");
         product12 = new Product("test12", new BigDecimal("12"), "uk");
@@ -36,48 +36,6 @@ public class HashCodeWrappersTest {
         sumWrapper11 = new StringSumElementsHashCodeWrapper(name11);
         sumWrapper12 = new StringSumElementsHashCodeWrapper(name12);
         sumWrapper13 = new StringSumElementsHashCodeWrapper(name13);
-    }
-
-    @Test
-    public void shouldBeSameHashMap() {
-        HashMap<String, Product> map = new HashMap<>();
-        map.put(name10, product10);
-        map.put(name11, product11);
-        map.put(name12, product12);
-        map.put(name13, product13);
-        ArrayList<Product> expected = new ArrayList<>();
-        expected.add(product12);
-        expected.add(product13);
-        expected.add(product10);
-        expected.add(product11);
-        ArrayList<Product> actual = new ArrayList<>();
-        Iterator<Map.Entry<String, Product>> entries = map.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<String, Product> entry = entries.next();
-            actual.add(entry.getValue());
-        }
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
-    }
-
-    @Test
-    public void shouldBeSameLinkedHashMap() {
-        LinkedHashMap<String, Product> map = new LinkedHashMap<>();
-        map.put(name10, product10);
-        map.put(name11, product11);
-        map.put(name12, product12);
-        map.put(name13, product13);
-        ArrayList<Product> expected = new ArrayList<>();
-        expected.add(product10);
-        expected.add(product11);
-        expected.add(product12);
-        expected.add(product13);
-        ArrayList<Product> actual = new ArrayList<>();
-        Iterator<Map.Entry<String, Product>> entries = map.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<String, Product> entry = entries.next();
-            actual.add(entry.getValue());
-        }
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
     }
 
     @Test
@@ -100,14 +58,14 @@ public class HashCodeWrappersTest {
         }
         Assert.assertArrayEquals(expected.toArray(), actual.toArray());
     }
-
+    
     @Test
     public void shouldBeSameLinkedHashMapByLength() {
         LinkedHashMap<StringLengthHashCodeWrapper, Product> map = new LinkedHashMap<>();
-        map.put(lengthWrapper10, product10);
         map.put(lengthWrapper11, product11);
-        map.put(lengthWrapper12, product12);
+        map.put(lengthWrapper10, product10);
         map.put(lengthWrapper13, product13);
+        map.put(lengthWrapper12, product12);
         ArrayList<Product> expected = new ArrayList<>();
         expected.add(product10);
         expected.add(product11);
@@ -119,21 +77,22 @@ public class HashCodeWrappersTest {
             Map.Entry<StringLengthHashCodeWrapper, Product> entry = entries.next();
             actual.add(entry.getValue());
         }
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        Assert.assertNotEquals(expected.toArray(), actual.toArray());
     }
 
     @Test
     public void shouldBeSameHashMapBySum() {
         HashMap<StringSumElementsHashCodeWrapper, Product> map = new HashMap<>();
-        map.put(sumWrapper10, product10);
+
         map.put(sumWrapper11, product11);
-        map.put(sumWrapper12, product12);
+        map.put(sumWrapper10, product10);
         map.put(sumWrapper13, product13);
+        map.put(sumWrapper12, product12);
         ArrayList<Product> expected = new ArrayList<>();
         expected.add(product10);
-        expected.add(product11);
-        expected.add(product12);
         expected.add(product13);
+        expected.add(product12);
+        expected.add(product11);
         ArrayList<Product> actual = new ArrayList<>();
         Iterator<Map.Entry<StringSumElementsHashCodeWrapper, Product>> entries = map.entrySet().iterator();
         while (entries.hasNext()) {
@@ -147,8 +106,8 @@ public class HashCodeWrappersTest {
     public void shouldBeSameLinkedHashMapBySum() {
         LinkedHashMap<StringSumElementsHashCodeWrapper, Product> map = new LinkedHashMap<>();
         map.put(sumWrapper10, product10);
-        map.put(sumWrapper11, product11);
         map.put(sumWrapper12, product12);
+        map.put(sumWrapper11, product11);
         map.put(sumWrapper13, product13);
         ArrayList<Product> expected = new ArrayList<>();
         expected.add(product10);
@@ -161,6 +120,6 @@ public class HashCodeWrappersTest {
             Map.Entry<StringSumElementsHashCodeWrapper, Product> entry = entries.next();
             actual.add(entry.getValue());
         }
-        Assert.assertArrayEquals(expected.toArray(), actual.toArray());
+        Assert.assertNotEquals(expected.toArray(), actual.toArray());
     }
 }

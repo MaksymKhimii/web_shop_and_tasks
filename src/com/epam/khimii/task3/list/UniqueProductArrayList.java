@@ -1,6 +1,5 @@
 package com.epam.khimii.task3.list;
 
-
 import com.epam.khimii.task1.entity.Product;
 
 import java.util.ArrayList;
@@ -38,20 +37,14 @@ public class UniqueProductArrayList<E extends Product> extends ArrayList<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        boolean flag = false;
-        for (E temp : c) {
-            if (add(temp))
-                flag = true;
-        }
-        return flag;
+        checkingAll(c);
+        return super.addAll(c);
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        for (E temp : c) {
-            add(index++, temp);
-        }
-        return true;
+        checkingAll(c);
+        return super.addAll(index, c);
     }
 
     @Override
@@ -79,6 +72,12 @@ public class UniqueProductArrayList<E extends Product> extends ArrayList<E> {
     private void checkElement(E element) {
         if (contains(element)) {
             throw new IllegalArgumentException("This element already exists");
+        }
+    }
+
+    private void checkingAll(Collection<? extends E> c) {
+        for (E temp : c) {
+            checkElement(temp);
         }
     }
 }
