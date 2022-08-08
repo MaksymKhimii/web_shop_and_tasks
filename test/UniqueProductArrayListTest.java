@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 public class UniqueProductArrayListTest {
-
     Product product10, product11, product12, product13 = null;
 
     @Before
@@ -19,10 +18,9 @@ public class UniqueProductArrayListTest {
     }
 
     /**
-     *
      * should not add one product twice(if it exists - not add)
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void addingTest() {
         UniqueProductArrayList<Product> products = new UniqueProductArrayList<>();
 
@@ -33,10 +31,9 @@ public class UniqueProductArrayListTest {
     }
 
     /**
-     *
      * should not add one product twice by index(if it exists - not add)
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void addingByIndexTest() {
         UniqueProductArrayList<Product> products = new UniqueProductArrayList<>();
 
@@ -49,7 +46,7 @@ public class UniqueProductArrayListTest {
     /**
      * should not set value if it exists in the arraylist
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void settingNotUniqTest() {
         UniqueProductArrayList<Product> products = new UniqueProductArrayList<>();
 
@@ -78,7 +75,7 @@ public class UniqueProductArrayListTest {
     /**
      * should not add all not unique collection
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void addAllNotUniqCollection() {
         UniqueProductArrayList<Product> products = new UniqueProductArrayList<>();
         UniqueProductArrayList<Product> collection = new UniqueProductArrayList<>();

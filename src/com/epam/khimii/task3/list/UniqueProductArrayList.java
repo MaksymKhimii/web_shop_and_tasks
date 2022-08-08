@@ -16,30 +16,23 @@ import java.util.function.UnaryOperator;
 public class UniqueProductArrayList<E extends Product> extends ArrayList<E> {
 
     public UniqueProductArrayList() {
-        super();
     }
 
     @Override
     public E set(int index, E element) {
-        if (contains(element)) {
-            return get(index);
-        }
+        checkElement(element);
         return super.set(index, element);
     }
 
     @Override
     public boolean add(E e) {
-        if (contains(e)) {
-            return false;
-        }
+        checkElement(e);
         return super.add(e);
     }
 
     @Override
     public void add(int index, E element) {
-        if (contains(element)) {
-            return;
-        }
+        checkElement(element);
         super.add(index, element);
     }
 
@@ -63,10 +56,10 @@ public class UniqueProductArrayList<E extends Product> extends ArrayList<E> {
 
     @Override
     public void replaceAll(UnaryOperator<E> operator) {
-        int index=-1;
-        for (E p: this) {
-            Product product = new Product(p.getName(),p.getPrice(),p.getCountry());
-            set(++index,operator.apply((E) product));
+        int index = -1;
+        for (E p : this) {
+            Product product = new Product(p.getName(), p.getPrice(), p.getCountry());
+            set(++index, operator.apply((E) product));
         }
     }
 
@@ -78,5 +71,14 @@ public class UniqueProductArrayList<E extends Product> extends ArrayList<E> {
     @Override
     public ListIterator<E> listIterator() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * method for checking is this element exists in collection
+     */
+    private void checkElement(E element) {
+        if (contains(element)) {
+            throw new IllegalArgumentException("This element already exists");
+        }
     }
 }

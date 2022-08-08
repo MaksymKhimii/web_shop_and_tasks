@@ -1,6 +1,5 @@
 package com.epam.khimii.task3.hashCodeWrappers;
 
-
 import java.util.Objects;
 
 /**
