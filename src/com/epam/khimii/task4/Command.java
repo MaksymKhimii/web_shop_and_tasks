@@ -1,4 +1,4 @@
-package com.epam.khimii.task4.command;
+package com.epam.khimii.task4;
 
 public interface Command {
     void execute();

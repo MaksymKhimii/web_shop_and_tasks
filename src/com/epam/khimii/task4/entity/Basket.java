@@ -15,7 +15,21 @@ public class Basket {
         return basket.isEmpty();
     }
 
+    public static boolean isExists(String name) {
+        for (Map.Entry<String, Integer> entry : basket.entrySet()) {
+            if (entry.getKey().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void put(String key, Integer value) {
+        if (isExists(key)) {
+            int newValue = basket.get(key) + value;
+            basket.put(key, newValue);
+            return;
+        }
         basket.put(key, value);
     }
 
@@ -27,13 +41,16 @@ public class Basket {
         basket.clear();
     }
 
-    public static void print(Basket map) {
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            System.out.println("Product{" +
-                    "name='" + entry.getKey() + '\'' +
-                    ", quantity='" + entry.getValue() +
-                    '\'' +
-                    '}');
+    @Override
+    public String toString() {
+        if (basket.isEmpty()) {
+            return "Empty basket(";
         }
+        String string = "";
+        StringBuilder stringBuilder = new StringBuilder(string);
+        for (Map.Entry<String, Integer> entry : basket.entrySet()) {
+            stringBuilder.append("Product{" + "name='").append(entry.getKey()).append('\'').append(", quantity='").append(entry.getValue()).append('\'').append('}').append("\r\n");
+        }
+        return stringBuilder.toString();
     }
 }

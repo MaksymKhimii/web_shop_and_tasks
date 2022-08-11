@@ -17,13 +17,16 @@ public class Order {
         return order.entrySet();
     }
 
-    public static <K, V> void print(Map<K, V> map) {
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            System.out.println("Product{" +
-                    "name='" + entry.getKey() + '\'' +
-                    ", quantity='" + entry.getValue() +
-                    '\'' +
-                    '}');
+    @Override
+    public String toString() {
+        if (order.isEmpty()) {
+            return "Empty order(";
         }
+        String string = "";
+        StringBuilder stringBuilder = new StringBuilder(string);
+        for (Map.Entry<LocalDateTime, HashMap<String, Integer>> entry : order.entrySet()) {
+            stringBuilder.append("Product{" + "name='").append(entry.getKey()).append('\'').append(", quantity='").append(entry.getValue()).append('\'').append('}').append("\r\n");
+        }
+        return stringBuilder.toString();
     }
 }

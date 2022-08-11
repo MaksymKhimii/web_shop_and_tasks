@@ -1,6 +1,7 @@
-package com.epam.khimii.task4.repository;
+package com.epam.khimii.task4.repository.impl;
 
 import com.epam.khimii.task4.entity.Order;
+import com.epam.khimii.task4.repository.IOrderRepositoty;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -8,34 +9,37 @@ import java.util.Map;
 
 import static com.epam.khimii.task4.entity.Basket.basket;
 
-public class OrderRepository {
+public class OrderRepositoryImpl implements IOrderRepositoty {
     protected static HashMap<String, Integer> orders = new HashMap<>();
     private static final Order order = new Order();
 
-    public static void doOrder(LocalDateTime date) {
+    @Override
+    public void doOrder(LocalDateTime date) {
         orders.putAll(basket);
         order.put(date, orders);
     }
 
-    public static void getOrderByRange(LocalDateTime date1, LocalDateTime date2) {
-        HashMap<String, Integer> neededOrder = new HashMap<>();
+    @Override
+    public HashMap<String, Integer> getOrderByRange(LocalDateTime date1, LocalDateTime date2) {
+        HashMap<String, Integer> neededOrder;
         for (Map.Entry<LocalDateTime, HashMap<String, Integer>> entry : order.entrySet()) {
             if (entry.getKey().isAfter(date1) && entry.getKey().isBefore(date2)) {
                 neededOrder = entry.getValue();
-                break;
+                return neededOrder;
             }
         }
-        Order.print(neededOrder);
+        return null;
     }
 
-    public static void getOrderByTime(LocalDateTime date) {
-        HashMap<String, Integer> neededOrder = new HashMap<>();
+    @Override
+    public HashMap<String, Integer> getOrderByTime(LocalDateTime date) {
+        HashMap<String, Integer> neededOrder;
         for (Map.Entry<LocalDateTime, HashMap<String, Integer>> entry : order.entrySet()) {
             if (date.equals(entry.getKey())) {
                 neededOrder = entry.getValue();
-                break;
+                return neededOrder;
             }
         }
-        Order.print(neededOrder);
+        return null;
     }
 }

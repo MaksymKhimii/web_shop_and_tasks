@@ -1,6 +1,6 @@
-package com.epam.khimii.task4.service;
+package com.epam.khimii.task4.command;
 
-import com.epam.khimii.task4.command.Command;
+import com.epam.khimii.task4.Command;
 import com.epam.khimii.task4.controller.OnlineStore;
 
 public class ExitCommand implements Command {
