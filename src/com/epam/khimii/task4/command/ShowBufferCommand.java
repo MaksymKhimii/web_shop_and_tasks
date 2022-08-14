@@ -1,14 +1,13 @@
 package com.epam.khimii.task4.command;
 
-import com.epam.khimii.task4.Command;
-import com.epam.khimii.task4.entity.Buffer;
+import com.epam.khimii.task4.parts.Utils;
 
 public class ShowBufferCommand implements Command {
-    public static Buffer buffer = new Buffer();
+    Utils utils = new Utils();
 
     @Override
     public void execute() {
-        System.out.println("Последние 5 товаров: ");
-        System.out.println(buffer.toString());
+        System.out.println("Last 5 products in buffer: ");
+        utils.printBuffer();
     }
 }

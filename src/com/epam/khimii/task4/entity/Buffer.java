@@ -1,13 +1,17 @@
 package com.epam.khimii.task4.entity;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class Buffer {
-    private static final LinkedHashMap<String, Integer> buffer =
-            new LinkedHashMap<>();
+    private static final int MAX = 5;
+    private static Map<String, Integer> buffer =
+            new LinkedHashMap<>() {
+                protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
+                    return size() > MAX;
+                }
+            };
 
     public int size() {
         return buffer.size();
@@ -18,25 +22,15 @@ public class Buffer {
     }
 
     public static boolean isExists(String name) {
-        for (Map.Entry<String, Integer> entry : buffer.entrySet()) {
-            if (entry.getKey().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return buffer.get(name) != null;
+    }
+
+    public Integer get(String key) {
+        return buffer.get(key);
     }
 
     public void put(String key, Integer value) {
-        if (isExists(key)) {
-            int newValue = buffer.get(key) + value;
-            buffer.put(key, newValue);
-            return;
-        }
         buffer.put(key, value);
-    }
-
-    public void remove(Object name) {
-        buffer.remove(name);
     }
 
     public Set<Map.Entry<String, Integer>> entrySet() {

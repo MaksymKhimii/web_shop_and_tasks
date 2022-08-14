@@ -1,16 +1,32 @@
 package com.epam.khimii.task4.service;
 
-import com.epam.khimii.task4.repository.impl.BasketRepositoryImpl;
+import com.epam.khimii.task4.repository.impl.BasketRepository;
 
-public class BasketService {
-    public static BasketRepositoryImpl basketRepository = new BasketRepositoryImpl();
+import java.util.Map;
 
-    public static String buyBasket() {
-        double totalSum = basketRepository.getBasketSum();
+public class BasketService implements IBasketServiceImpl {
+    public BasketRepository basketRepository = new BasketRepository();
+
+    @Override
+    public double buyBasket() {
+        double totalSum = getBasketSum();
         if (totalSum == -1) {
-            return "Basket is empty, you can't buy it";
+            return -1;
         }
-        BasketRepositoryImpl.clear();
-        return "The total amount of the order: " + totalSum;
+        basketRepository.clear();
+        return totalSum;
+    }
+
+    @Override
+    public double getBasketSum() {
+        if (basketRepository.isEmpty()) {
+            return -1;
+        }
+        double totalSum = 0;
+        Map<Double, Integer> basket = basketRepository.getValuesForCalculation();
+        for (Map.Entry<Double, Integer> entry : basket.entrySet()) {
+            totalSum += entry.getKey() * entry.getValue();
+        }
+        return totalSum;
     }
 }

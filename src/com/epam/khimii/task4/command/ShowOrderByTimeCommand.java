@@ -1,20 +1,24 @@
 package com.epam.khimii.task4.command;
 
-import com.epam.khimii.task4.Command;
-import com.epam.khimii.task4.service.OrderServiceImpl;
+import com.epam.khimii.task4.controller.ApplicationContext;
+import com.epam.khimii.task4.service.OrderService;
 
 import java.time.LocalDateTime;
-import java.util.Scanner;
+
 
 public class ShowOrderByTimeCommand implements Command {
-    Scanner scanner = new Scanner(System.in);
-    public static OrderServiceImpl orderServiceImpl = new OrderServiceImpl();
+    ApplicationContext applicationContext = new ApplicationContext();
+    private OrderService orderService = new OrderService();
 
     @Override
     public void execute() {
-        System.out.println("Введите дату заказа:");
-        LocalDateTime date = LocalDateTime.parse(scanner.nextLine());
+        System.out.println("Enter order date:");
+        LocalDateTime date = applicationContext.getTime();
+        if (orderService.findOrderByTime(date) == null) {
+            System.out.println("Order for the specified time was not found");
+            return;
+        }
         System.out.println("Order: ");
-        System.out.println(orderServiceImpl.findOrderByTime(date));
+        System.out.println(orderService.findOrderByTime(date).toString());
     }
 }

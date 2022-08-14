@@ -5,7 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class Basket {
-    public static final HashMap<String, Integer> basket = new HashMap<>();
+    private static final Map<String, Integer> basket = new HashMap<>();
+
+    public Map<String, Integer> getBasket() {
+        return basket;
+    }
 
     public int size() {
         return basket.size();
@@ -16,25 +20,26 @@ public class Basket {
     }
 
     public static boolean isExists(String name) {
-        for (Map.Entry<String, Integer> entry : basket.entrySet()) {
+     /*   for (Map.Entry<String, Integer> entry : basket.entrySet()) {
             if (entry.getKey().equals(name)) {
                 return true;
             }
         }
-        return false;
-    }
+        return false;*/
 
-    public void put(String key, Integer value) {
-        if (isExists(key)) {
-            int newValue = basket.get(key) + value;
-            basket.put(key, newValue);
-            return;
-        }
-        basket.put(key, value);
+        return basket.get(name) != null;
     }
 
     public Set<Map.Entry<String, Integer>> entrySet() {
         return basket.entrySet();
+    }
+
+    public Integer get(String key) {
+        return basket.get(key);
+    }
+
+    public void put(String key, Integer value) {
+        basket.put(key, value);
     }
 
     public void clear() {

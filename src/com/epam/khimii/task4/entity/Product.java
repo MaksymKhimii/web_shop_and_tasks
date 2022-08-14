@@ -2,13 +2,13 @@ package com.epam.khimii.task4.entity;
 
 import java.util.Objects;
 
-public class Product2 {
+public class Product {
 
     private String name;
     private double price;
     private String country;
 
-    public Product2(String name, double price, String country) {
+    public Product(String name, double price, String country) {
         this.name = name;
         this.price = price;
         this.country = country;
@@ -30,8 +30,7 @@ public class Product2 {
         this.name = name;
     }
 
-    public void setPrice(double
-                                 price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -52,7 +51,7 @@ public class Product2 {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Product2 product = (Product2) o;
+        Product product = (Product) o;
         return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(country, product.country);
     }
 
