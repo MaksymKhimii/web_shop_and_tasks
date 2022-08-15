@@ -1,10 +1,10 @@
 package com.epam.khimii.task4.repository.impl;
 
 import com.epam.khimii.task4.entity.Buffer;
-import com.epam.khimii.task4.repository.IBufferRepositoryImpl;
+import com.epam.khimii.task4.repository.IBufferRepository;
 import static com.epam.khimii.task4.entity.Buffer.isExists;
 
-public class BufferRepository implements IBufferRepositoryImpl {
+public class BufferRepositoryImpl implements IBufferRepository {
     private Buffer buffer = new Buffer();
 
     public void put(String key, Integer value) {
@@ -14,6 +14,11 @@ public class BufferRepository implements IBufferRepositoryImpl {
             return;
         }
         buffer.put(key, value);
+    }
+
+    @Override
+    public Buffer getBuffer(){
+        return buffer;
     }
 
     @Override

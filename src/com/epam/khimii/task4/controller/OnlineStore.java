@@ -12,6 +12,7 @@ import com.epam.khimii.task4.command.ShowProductsCommand;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import static com.epam.khimii.task4.parts.InputCheck.check;
 
@@ -19,22 +20,26 @@ public class OnlineStore {
     private final Map<Integer, Command> commands = new HashMap<>();
     private boolean finish = false;
     ApplicationContext applicationContext = new ApplicationContext();
+    Scanner scanner;
 
     public void init() {
         applicationContext.initAll();
-        commands.put(1, new ShowProductsCommand());
-        commands.put(2, new AddProdToBasketCommand(applicationContext.getBasketRepository(), applicationContext.getProductRepository()));
-        commands.put(3, new ShowBasketCommand());
-        commands.put(4, new BuyBasketCommand());
-        commands.put(5, new ShowBufferCommand());
-        commands.put(6, new DoOrderCommand());
-        commands.put(7, new ShowOrderByTimeRangeCommand());
-        commands.put(8, new ShowOrderByTimeCommand());
+        scanner = new Scanner(System.in);
+        commands.put(1, new ShowProductsCommand(applicationContext.getProductRepository()));
+        commands.put(2, new AddProdToBasketCommand(applicationContext.getBasketRepository(),
+                applicationContext.getProductRepository(), scanner));
+        commands.put(3, new ShowBasketCommand(applicationContext.getBasketRepository()));
+        commands.put(4, new BuyBasketCommand(applicationContext.getBasketService()));
+        commands.put(5, new ShowBufferCommand(applicationContext.getBufferRepository()));
+        commands.put(6, new DoOrderCommand(applicationContext.getOrderRepository()));
+        commands.put(7, new ShowOrderByTimeRangeCommand(applicationContext.getOrderService(), scanner));
+        commands.put(8, new ShowOrderByTimeCommand(applicationContext.getOrderService(), scanner));
     }
 
     public void choice() {
         init();
-        int myChoice;
+        String myChoice;
+        int action;
         while (!finish) {
             System.out.println("Available actions:");
             System.out.println("1 - display a list of products");
@@ -48,12 +53,17 @@ public class OnlineStore {
             System.out.println("0 - Exit ");
             System.out.println("------------------------------------------------------------------------");
             System.out.println("What's your choice?");
-            myChoice = check();
-            if (myChoice == 0) {
+            myChoice = scanner.nextLine();
+            action = check(myChoice);
+            if (action == 0) {
                 break;
             }
-            Command command = commands.get(myChoice);
-            command.execute();
+            if (action == -1) {
+                System.out.println("Wrong input!");
+            } else {
+                Command command = commands.get(action);
+                command.execute();
+            }
         }
     }
 }

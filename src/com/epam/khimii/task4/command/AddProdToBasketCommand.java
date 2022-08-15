@@ -1,21 +1,21 @@
 package com.epam.khimii.task4.command;
 
-import com.epam.khimii.task4.controller.ApplicationContext;
-import com.epam.khimii.task4.repository.impl.BasketRepository;
-import com.epam.khimii.task4.repository.impl.ProductRepository;
+import com.epam.khimii.task4.repository.impl.BasketRepositoryImpl;
+import com.epam.khimii.task4.repository.impl.ProductRepositoryImpl;
 
 import java.util.Scanner;
 
 
 public class AddProdToBasketCommand implements Command {
-    ApplicationContext applicationContext = new ApplicationContext();
-    Scanner scanner = applicationContext.getScanner();
-    BasketRepository basketRepository;
-    ProductRepository productRepository;
+    Scanner scanner;
+    BasketRepositoryImpl basketRepositoryImpl;
+    ProductRepositoryImpl productRepositoryImpl;
 
-    public AddProdToBasketCommand(BasketRepository basketRepository, ProductRepository productRepository) {
-        this.basketRepository = basketRepository;
-        this.productRepository = productRepository;
+    public AddProdToBasketCommand(BasketRepositoryImpl basketRepositoryImpl, ProductRepositoryImpl productRepositoryImpl,
+                                  Scanner scanner) {
+        this.basketRepositoryImpl = basketRepositoryImpl;
+        this.productRepositoryImpl = productRepositoryImpl;
+        this.scanner = scanner;
     }
 
     @Override
@@ -24,10 +24,10 @@ public class AddProdToBasketCommand implements Command {
         String name = scanner.nextLine();
         System.out.println("Enter the quantity:");
         int quantity = Integer.parseInt(scanner.nextLine());
-        if (!productRepository.isExists(name)) {
+        if (!productRepositoryImpl.isExists(name)) {
             System.out.println("This product does not exist in our database(");
             return;
         }
-        basketRepository.addToBasket(name, quantity);
+        basketRepositoryImpl.addToBasket(name, quantity);
     }
 }

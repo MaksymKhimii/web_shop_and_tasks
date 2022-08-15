@@ -1,19 +1,24 @@
 package com.epam.khimii.task4.parts;
 
-import java.util.Scanner;
-
 public class InputCheck {
-    public static Scanner scanner = new Scanner(System.in);
 
-    public static int check() {
-        int choice;
-        do {
-            while (!scanner.hasNextInt()) {
-                System.out.println("It's not a number");
-                scanner.next();
-            }
-            choice = scanner.nextInt();
-        } while (choice < 0 || choice > 8);
-        return choice;
+    public static int check(String сhoice) {
+        if (!isDigit(сhoice)) {
+            return -1;
+        }
+        int number = Integer.parseInt(сhoice);
+        if (number < 0 || number > 8) {
+            return -1;
+        }
+        return number;
+    }
+
+    private static boolean isDigit(String s) throws NumberFormatException {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

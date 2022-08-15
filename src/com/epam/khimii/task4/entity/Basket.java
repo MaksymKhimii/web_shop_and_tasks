@@ -46,6 +46,9 @@ public class Basket {
         basket.clear();
     }
 
+    public void remove(String key){
+        basket.remove(key);
+    }
     @Override
     public String toString() {
         if (basket.isEmpty()) {

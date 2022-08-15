@@ -1,9 +1,8 @@
 package com.epam.khimii.task4.repository.impl;
 
-import com.epam.khimii.task4.controller.ApplicationContext;
 import com.epam.khimii.task4.entity.Basket;
 import com.epam.khimii.task4.entity.Product;
-import com.epam.khimii.task4.repository.IBasketRepositoryImpl;
+import com.epam.khimii.task4.repository.IBasketRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +10,20 @@ import java.util.Map;
 
 import static com.epam.khimii.task4.entity.Basket.isExists;
 
-public class BasketRepository implements IBasketRepositoryImpl {
-    ApplicationContext applicationContext = new ApplicationContext();
+public class BasketRepositoryImpl implements IBasketRepository {
     private Basket basket = new Basket();
-    List<Product> products = applicationContext.getProducts();
-    BufferRepository bufferRepository = new BufferRepository();
+    private BufferRepositoryImpl bufferRepositoryImpl;
+    private List<Product> products;
+
+    public BasketRepositoryImpl(BufferRepositoryImpl bufferRepositoryImpl,
+                                List<Product> products) {
+        this.bufferRepositoryImpl = bufferRepositoryImpl;
+        this.products = products;
+    }
+
+    public Basket getBasket() {
+        return basket;
+    }
 
     public int size() {
         return basket.size();
@@ -41,9 +49,10 @@ public class BasketRepository implements IBasketRepositoryImpl {
     @Override
     public void addToBasket(String name, int quantity) {
         put(name, quantity);
-        bufferRepository.addToBasketBuffer(name, quantity);
+        bufferRepositoryImpl.addToBasketBuffer(name, quantity);
     }
 
+    @Override
     public Map<Double, Integer> getValuesForCalculation() {
         Map<Double, Integer> forCalculation = new HashMap<>();
         for (Map.Entry<String, Integer> entry : basket.entrySet()) {

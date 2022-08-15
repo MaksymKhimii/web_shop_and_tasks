@@ -1,25 +1,33 @@
+import com.epam.khimii.task4.controller.ApplicationContext;
 import com.epam.khimii.task4.entity.Basket;
 import com.epam.khimii.task4.entity.Buffer;
 import com.epam.khimii.task4.entity.Order;
 import com.epam.khimii.task4.entity.Product;
-import com.epam.khimii.task4.repository.impl.BasketRepository;
-import com.epam.khimii.task4.repository.impl.OrderRepository;
-import com.epam.khimii.task4.service.BasketService;
+import com.epam.khimii.task4.repository.impl.BasketRepositoryImpl;
+import com.epam.khimii.task4.repository.impl.BufferRepositoryImpl;
+import com.epam.khimii.task4.repository.impl.OrderRepositoryImpl;
+import com.epam.khimii.task4.repository.impl.ProductRepositoryImpl;
+import com.epam.khimii.task4.service.BasketServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 public class Task4Test {
+    ApplicationContext applicationContext = new ApplicationContext();
     Product product1, product2, product3, product4, product5, product6;
     public Basket basket;
     public Buffer buffer;
-    private Order order;
-    BasketRepository basketRepository;
-    public static OrderRepository orderRepository;
-    BasketService basketService;
+    private Optional<Order> order;
+    private List<Product> products;
+    ProductRepositoryImpl productRepository;
+    BasketRepositoryImpl basketRepositoryImpl;
+    public static OrderRepositoryImpl orderRepositoryImpl;
+    BasketServiceImpl basketServiceImpl;
+    BufferRepositoryImpl bufferRepository;
 
     @Before
     public void BeforeTest() {
@@ -29,44 +37,47 @@ public class Task4Test {
         product4 = new Product("tomato", 14.0, "uk");
         product5 = new Product("peach", 15.0, "uk");
         product6 = new Product("olive", 16.0, "ua");
+        productRepository = new ProductRepositoryImpl();
+        products = productRepository.getProducts();
         basket = new Basket();
         buffer = new Buffer();
-        order = new Order();
-        basketRepository = new BasketRepository();
-        orderRepository = new OrderRepository();
-        basketService = new BasketService();
+        bufferRepository = new BufferRepositoryImpl();
+        basketRepositoryImpl = new BasketRepositoryImpl(bufferRepository, products);
+        orderRepositoryImpl = new OrderRepositoryImpl(basketRepositoryImpl.getBasket());
+        basketServiceImpl = new BasketServiceImpl(basketRepositoryImpl);
+        applicationContext.initAll();
     }
 
     @Test
     public void addToBasketTest() {
-        basketRepository.addToBasket(product1.getName(), 1);
-        basketRepository.addToBasket(product3.getName(), 12);
-        Assert.assertEquals(2, basketRepository.size());
+        basketRepositoryImpl.addToBasket(product1.getName(), 1);
+        basketRepositoryImpl.addToBasket(product3.getName(), 12);
+        Assert.assertEquals(2, basketRepositoryImpl.size());
         basket.clear();
     }
 
     @Test
     public void buyBasketTest() {
-        basketRepository.addToBasket(product1.getName(), 1);
-        basketRepository.addToBasket(product3.getName(), 12);
-        double actual = basketService.buyBasket();
-        Assert.assertEquals(0, basketRepository.size());
+        basketRepositoryImpl.addToBasket(product1.getName(), 1);
+        basketRepositoryImpl.addToBasket(product3.getName(), 12);
+        double actual = basketServiceImpl.buyBasket();
+        Assert.assertEquals(0, basketRepositoryImpl.size());
         Assert.assertEquals(167.0, actual, 0);
         basket.clear();
     }
 
     @Test
     public void buyEmptyBasketTest() {
-        double actual = basketService.buyBasket();
-        Assert.assertEquals(0, basketRepository.size());
+        double actual = basketServiceImpl.buyBasket();
+        Assert.assertEquals(0, basketRepositoryImpl.size());
         Assert.assertEquals(-1, actual, 0);
         basket.clear();
     }
 
     @Test
     public void showBasketTest() {
-        basketRepository.addToBasket(product1.getName(), 1);
-        basketRepository.addToBasket(product3.getName(), 12);
+        basketRepositoryImpl.addToBasket(product1.getName(), 1);
+        basketRepositoryImpl.addToBasket(product3.getName(), 12);
         Assert.assertEquals("""
                 Product{name='apple', quantity='1'}\r
                 Product{name='potato', quantity='12'}\r
@@ -76,12 +87,12 @@ public class Task4Test {
 
     @Test
     public void showBufferTest() {
-        basketRepository.addToBasket(product1.getName(), 1);
-        basketRepository.addToBasket(product3.getName(), 12);
-        basketRepository.addToBasket(product2.getName(), 11);
-        basketRepository.addToBasket(product4.getName(), 12);
-        basketRepository.addToBasket(product5.getName(), 7);
-        basketRepository.addToBasket(product6.getName(), 99);
+        basketRepositoryImpl.addToBasket(product1.getName(), 1);
+        basketRepositoryImpl.addToBasket(product3.getName(), 12);
+        basketRepositoryImpl.addToBasket(product2.getName(), 11);
+        basketRepositoryImpl.addToBasket(product4.getName(), 12);
+        basketRepositoryImpl.addToBasket(product5.getName(), 7);
+        basketRepositoryImpl.addToBasket(product6.getName(), 99);
         Assert.assertEquals("""
                 Product{name='potato', quantity='12'}\r
                 Product{name='banana', quantity='11'}\r
@@ -94,32 +105,33 @@ public class Task4Test {
 
     @Test
     public void doOrderTest() {
-        basketRepository.addToBasket(product2.getName(), 11);
-        basketRepository.addToBasket(product4.getName(), 2);
+        basketRepositoryImpl.addToBasket(product2.getName(), 11);
+        basketRepositoryImpl.addToBasket(product4.getName(), 2);
         LocalDateTime date = LocalDateTime.now();
-        orderRepository.doOrder(date);
-        Assert.assertEquals("Product{name='" + date + "', quantity='{" + product2.getName() + "=11" +
-                ", " + product4.getName() + "=2}'}\r\n", order.toString());
+        orderRepositoryImpl.doOrder(date);
+        order = orderRepositoryImpl.getOrderByTime(date);
+        Assert.assertEquals("Optional[Order{date=" + date + ", " +
+                "order={" + product2.getName() + "=11, " + product4.getName() + "=2}}]", order.toString());
         basket.clear();
     }
 
     @Test
     public void showOrderByTimeRangeTest() {
-        basketRepository.addToBasket(product1.getName(), 1);
+        basketRepositoryImpl.addToBasket(product1.getName(), 1);
         LocalDateTime date = LocalDateTime.now();
-        orderRepository.doOrder(date);
-        Map<String, Integer> map = orderRepository.getOrderByRange(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
-        Assert.assertEquals("{" + product1.getName() + "=1}", map.toString());
+        orderRepositoryImpl.doOrder(date);
+        List<Order> actual = orderRepositoryImpl.getOrderByRange(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1));
+        Assert.assertEquals("[Order{date=" + date + ", order={" + product1.getName() + "=1}}]", actual.toString());
         basket.clear();
     }
 
     @Test
     public void showOrderByTimeTest() {
-        basketRepository.addToBasket(product2.getName(), 17);
+        basketRepositoryImpl.addToBasket(product2.getName(), 17);
         LocalDateTime date = LocalDateTime.now();
-        orderRepository.doOrder(date);
-        Map<String, Integer> map = orderRepository.getOrderByTime(date);
-        Assert.assertEquals("{" + product2.getName() + "=17}", map.toString());
+        orderRepositoryImpl.doOrder(date);
+        Optional<Order> actual = orderRepositoryImpl.getOrderByTime(date);
+        Assert.assertEquals("Optional[Order{date=" + date + ", order={" + product2.getName() + "=17}}]", actual.toString());
         basket.clear();
     }
 }

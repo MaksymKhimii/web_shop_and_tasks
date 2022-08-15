@@ -2,35 +2,29 @@ package com.epam.khimii.task4.entity;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 public class Order {
-    private static final TreeMap<LocalDateTime, Map<String, Integer>> order = new TreeMap<>();
+    private LocalDateTime date;
+    private Map<String, Integer> order;
 
-    public void put(LocalDateTime key, Map<String, Integer> value) {
-        order.put(key, value);
+    public Order(LocalDateTime date, Map<String, Integer> order) {
+        this.date = date;
+        this.order = order;
     }
 
-    public Set<Map.Entry<LocalDateTime, Map<String, Integer>>> entrySet() {
-        return order.entrySet();
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public Map<String, Integer> get(LocalDateTime key) {
-        return order.get(key);
+    public Map<String, Integer> getOrder() {
+        return order;
     }
-
 
     @Override
     public String toString() {
-        if (order.isEmpty()) {
-            return "Empty order(";
-        }
-        String string = "";
-        StringBuilder stringBuilder = new StringBuilder(string);
-        for (Map.Entry<LocalDateTime, Map<String, Integer>> entry : order.entrySet()) {
-            stringBuilder.append("Product{" + "name='").append(entry.getKey()).append('\'').append(", quantity='").append(entry.getValue()).append('\'').append('}').append("\r\n");
-        }
-        return stringBuilder.toString();
+        return "Order{" +
+                "date=" + date +
+                ", order=" + order +
+                '}';
     }
 }
