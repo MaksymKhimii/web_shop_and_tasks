@@ -1,12 +1,12 @@
 package com.epam.khimii.task4.command;
 
 import com.epam.khimii.task4.parts.Utils;
-import com.epam.khimii.task4.repository.impl.BasketRepositoryImpl;
+import com.epam.khimii.task4.repository.IBasketRepository;
 
 public class ShowBasketCommand implements Command {
-    BasketRepositoryImpl basketRepository;
+    private IBasketRepository basketRepository;
 
-    public ShowBasketCommand(BasketRepositoryImpl basketRepository) {
+    public ShowBasketCommand(IBasketRepository basketRepository) {
         this.basketRepository = basketRepository;
     }
 

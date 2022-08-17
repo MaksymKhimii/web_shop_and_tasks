@@ -3,6 +3,8 @@ package com.epam.khimii.task4.repository.impl;
 import com.epam.khimii.task4.entity.Basket;
 import com.epam.khimii.task4.entity.Product;
 import com.epam.khimii.task4.repository.IBasketRepository;
+import com.epam.khimii.task4.repository.IBufferRepository;
+import com.epam.khimii.task4.repository.IProductRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,15 +14,15 @@ import static com.epam.khimii.task4.entity.Basket.isExists;
 
 public class BasketRepositoryImpl implements IBasketRepository {
     private Basket basket = new Basket();
-    private BufferRepositoryImpl bufferRepositoryImpl;
+    private IBufferRepository bufferRepositoryImpl;
     private List<Product> products;
 
-    public BasketRepositoryImpl(BufferRepositoryImpl bufferRepositoryImpl,
-                                List<Product> products) {
+    public BasketRepositoryImpl(IProductRepository productRepositoryImpl, IBufferRepository bufferRepositoryImpl) {
         this.bufferRepositoryImpl = bufferRepositoryImpl;
-        this.products = products;
+        products = productRepositoryImpl.getProducts();
     }
 
+    @Override
     public Basket getBasket() {
         return basket;
     }
@@ -29,10 +31,12 @@ public class BasketRepositoryImpl implements IBasketRepository {
         return basket.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return basket.isEmpty();
     }
 
+    @Override
     public void clear() {
         basket.clear();
     }

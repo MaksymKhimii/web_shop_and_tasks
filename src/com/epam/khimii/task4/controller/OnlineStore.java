@@ -4,6 +4,7 @@ import com.epam.khimii.task4.command.Command;
 import com.epam.khimii.task4.command.AddProdToBasketCommand;
 import com.epam.khimii.task4.command.BuyBasketCommand;
 import com.epam.khimii.task4.command.DoOrderCommand;
+import com.epam.khimii.task4.command.NoCommand;
 import com.epam.khimii.task4.command.ShowOrderByTimeCommand;
 import com.epam.khimii.task4.command.ShowBasketCommand;
 import com.epam.khimii.task4.command.ShowBufferCommand;
@@ -12,34 +13,32 @@ import com.epam.khimii.task4.command.ShowProductsCommand;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
-import static com.epam.khimii.task4.parts.InputCheck.check;
-
 public class OnlineStore {
-    private final Map<Integer, Command> commands = new HashMap<>();
+    private final Map<String, Command> commands = new HashMap<>();
     private boolean finish = false;
-    ApplicationContext applicationContext = new ApplicationContext();
-    Scanner scanner;
+    private ApplicationContext applicationContext = new ApplicationContext();
+    private Scanner scanner;
 
     public void init() {
         applicationContext.initAll();
-        scanner = new Scanner(System.in);
-        commands.put(1, new ShowProductsCommand(applicationContext.getProductRepository()));
-        commands.put(2, new AddProdToBasketCommand(applicationContext.getBasketRepository(),
-                applicationContext.getProductRepository(), scanner));
-        commands.put(3, new ShowBasketCommand(applicationContext.getBasketRepository()));
-        commands.put(4, new BuyBasketCommand(applicationContext.getBasketService()));
-        commands.put(5, new ShowBufferCommand(applicationContext.getBufferRepository()));
-        commands.put(6, new DoOrderCommand(applicationContext.getOrderRepository()));
-        commands.put(7, new ShowOrderByTimeRangeCommand(applicationContext.getOrderService(), scanner));
-        commands.put(8, new ShowOrderByTimeCommand(applicationContext.getOrderService(), scanner));
+        scanner = applicationContext.getScanner();
+        commands.put("1", new ShowProductsCommand(applicationContext.getProductRepositoryImpl()));
+        commands.put("2", new AddProdToBasketCommand(applicationContext.getBasketServiceImpl(),
+                applicationContext.getProductService(), scanner));
+        commands.put("3", new ShowBasketCommand(applicationContext.getBasketRepositoryImpl()));
+        commands.put("4", new BuyBasketCommand(applicationContext.getBasketServiceImpl()));
+        commands.put("5", new ShowBufferCommand(applicationContext.getBufferRepositoryImpl()));
+        commands.put("6", new DoOrderCommand(applicationContext.getOrderRepositoryImpl()));
+        commands.put("7", new ShowOrderByTimeRangeCommand(applicationContext.getOrderServiceImpl(), scanner));
+        commands.put("8", new ShowOrderByTimeCommand(applicationContext.getOrderServiceImpl(), scanner));
     }
 
     public void choice() {
         init();
         String myChoice;
-        int action;
         while (!finish) {
             System.out.println("Available actions:");
             System.out.println("1 - display a list of products");
@@ -54,16 +53,11 @@ public class OnlineStore {
             System.out.println("------------------------------------------------------------------------");
             System.out.println("What's your choice?");
             myChoice = scanner.nextLine();
-            action = check(myChoice);
-            if (action == 0) {
+            if (Objects.equals(myChoice, "0")) {
                 break;
             }
-            if (action == -1) {
-                System.out.println("Wrong input!");
-            } else {
-                Command command = commands.get(action);
-                command.execute();
-            }
+            Command command = commands.getOrDefault(myChoice, new NoCommand());
+            command.execute();
         }
     }
 }

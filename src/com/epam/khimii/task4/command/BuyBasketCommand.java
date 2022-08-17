@@ -1,20 +1,21 @@
 package com.epam.khimii.task4.command;
 
-import com.epam.khimii.task4.service.BasketServiceImpl;
+import com.epam.khimii.task4.service.IBasketService;
 
 public class BuyBasketCommand implements Command {
-    BasketServiceImpl basketServiceImpl;
+    private IBasketService basketServiceImpl;
 
-    public BuyBasketCommand(BasketServiceImpl basketServiceImpl) {
+    public BuyBasketCommand(IBasketService basketServiceImpl) {
         this.basketServiceImpl = basketServiceImpl;
     }
 
     @Override
     public void execute() {
-        if (basketServiceImpl.getBasketSum() == -1) {
+        double sum = basketServiceImpl.getBasketSum();
+        if (sum == -1) {
             System.out.println("Basket is empty, you can't buy it");
             return;
         }
-        System.out.println("The total amount of the order: " + basketServiceImpl.buyBasket());
+        System.out.println("The total amount of the order: " + sum);
     }
 }

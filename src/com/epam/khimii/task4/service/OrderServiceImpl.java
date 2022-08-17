@@ -1,16 +1,16 @@
 package com.epam.khimii.task4.service;
 
 import com.epam.khimii.task4.entity.Order;
-import com.epam.khimii.task4.repository.impl.OrderRepositoryImpl;
+import com.epam.khimii.task4.repository.IOrderRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public class OrderServiceImpl implements IOrderService {
-    private OrderRepositoryImpl orderRepositoryImpl;
+    private IOrderRepository orderRepositoryImpl;
 
-    public OrderServiceImpl(OrderRepositoryImpl orderRepositoryImpl) {
+    public OrderServiceImpl(IOrderRepository orderRepositoryImpl) {
         this.orderRepositoryImpl = orderRepositoryImpl;
     }
 

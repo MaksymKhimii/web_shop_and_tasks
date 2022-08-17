@@ -1,12 +1,12 @@
 package com.epam.khimii.task4.command;
 
 import com.epam.khimii.task4.parts.Utils;
-import com.epam.khimii.task4.repository.impl.ProductRepositoryImpl;
+import com.epam.khimii.task4.repository.IProductRepository;
 
 public class ShowProductsCommand implements Command {
-    ProductRepositoryImpl productRepository;
+    private IProductRepository productRepository;
 
-    public ShowProductsCommand(ProductRepositoryImpl productRepository) {
+    public ShowProductsCommand(IProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

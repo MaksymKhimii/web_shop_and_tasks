@@ -1,24 +1,19 @@
 package com.epam.khimii.task4.service;
 
-import com.epam.khimii.task4.repository.impl.BasketRepositoryImpl;
+import com.epam.khimii.task4.repository.IBasketRepository;
 
 import java.util.Map;
 
 public class BasketServiceImpl implements IBasketService {
-    private BasketRepositoryImpl basketRepositoryImpl;
+    private IBasketRepository basketRepositoryImpl;
 
-    public BasketServiceImpl(BasketRepositoryImpl basketRepositoryImpl) {
+    public BasketServiceImpl(IBasketRepository basketRepositoryImpl) {
         this.basketRepositoryImpl = basketRepositoryImpl;
     }
 
     @Override
-    public double buyBasket() {
-        double totalSum = getBasketSum();
-        if (totalSum == -1) {
-            return -1;
-        }
-        basketRepositoryImpl.clear();
-        return totalSum;
+    public void addToBasket(String name, int quantity) {
+        basketRepositoryImpl.addToBasket(name, quantity);
     }
 
     @Override
@@ -31,6 +26,7 @@ public class BasketServiceImpl implements IBasketService {
         for (Map.Entry<Double, Integer> entry : basket.entrySet()) {
             totalSum += entry.getKey() * entry.getValue();
         }
+        basketRepositoryImpl.clear();
         return totalSum;
     }
 }

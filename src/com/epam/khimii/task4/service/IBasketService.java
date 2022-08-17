@@ -1,7 +1,7 @@
 package com.epam.khimii.task4.service;
 
 public interface IBasketService {
-    double buyBasket();
+    void addToBasket(String name, int quantity);
 
     double getBasketSum();
 }

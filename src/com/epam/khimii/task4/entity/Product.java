@@ -3,7 +3,6 @@ package com.epam.khimii.task4.entity;
 import java.util.Objects;
 
 public class Product {
-
     private String name;
     private double price;
     private String country;

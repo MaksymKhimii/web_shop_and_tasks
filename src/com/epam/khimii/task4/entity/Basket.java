@@ -20,13 +20,6 @@ public class Basket {
     }
 
     public static boolean isExists(String name) {
-     /*   for (Map.Entry<String, Integer> entry : basket.entrySet()) {
-            if (entry.getKey().equals(name)) {
-                return true;
-            }
-        }
-        return false;*/
-
         return basket.get(name) != null;
     }
 
@@ -46,9 +39,6 @@ public class Basket {
         basket.clear();
     }
 
-    public void remove(String key){
-        basket.remove(key);
-    }
     @Override
     public String toString() {
         if (basket.isEmpty()) {

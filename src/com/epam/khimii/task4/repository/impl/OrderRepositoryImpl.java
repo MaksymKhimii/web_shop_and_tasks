@@ -29,19 +29,16 @@ public class OrderRepositoryImpl implements IOrderRepository {
         for (Order entry : orders) {
             if (entry.getDate().isAfter(date1) && entry.getDate().isBefore(date2)) {
                 neededOrder.add(entry);
-                return neededOrder;
             }
         }
-        return null;
+        return neededOrder;
     }
 
     @Override
     public Optional<Order> getOrderByTime(LocalDateTime date) {
-        Order neededOrder;
         for (Order entry : orders) {
             if (date.equals(entry.getDate())) {
-                neededOrder = entry;
-                return Optional.of(neededOrder);
+                return Optional.of(entry);
             }
         }
         return Optional.empty();

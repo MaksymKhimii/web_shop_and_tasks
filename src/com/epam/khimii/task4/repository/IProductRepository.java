@@ -8,4 +8,8 @@ public interface IProductRepository {
     void add(Product p);
 
     List<Product> getProducts();
+
+    void addAll(List<Product> products);
+
+    boolean isExists(String name);
 }

@@ -1,13 +1,13 @@
 package com.epam.khimii.task4.command;
 
-import com.epam.khimii.task4.repository.impl.OrderRepositoryImpl;
+import com.epam.khimii.task4.repository.IOrderRepository;
 
 import java.time.LocalDateTime;
 
 public class DoOrderCommand implements Command {
-    private final OrderRepositoryImpl orderRepositoryImpl;
+    private final IOrderRepository orderRepositoryImpl;
 
-    public DoOrderCommand(OrderRepositoryImpl orderRepositoryImpl) {
+    public DoOrderCommand(IOrderRepository orderRepositoryImpl) {
         this.orderRepositoryImpl = orderRepositoryImpl;
     }
 

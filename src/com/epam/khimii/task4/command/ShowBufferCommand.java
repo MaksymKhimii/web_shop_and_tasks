@@ -1,12 +1,12 @@
 package com.epam.khimii.task4.command;
 
 import com.epam.khimii.task4.parts.Utils;
-import com.epam.khimii.task4.repository.impl.BufferRepositoryImpl;
+import com.epam.khimii.task4.repository.IBufferRepository;
 
 public class ShowBufferCommand implements Command {
-    BufferRepositoryImpl bufferRepository;
+    private IBufferRepository bufferRepository;
 
-    public ShowBufferCommand(BufferRepositoryImpl bufferRepository) {
+    public ShowBufferCommand(IBufferRepository bufferRepository) {
         this.bufferRepository = bufferRepository;
     }
 

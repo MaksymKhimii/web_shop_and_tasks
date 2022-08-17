@@ -22,7 +22,6 @@ public class Task4Test {
     public Basket basket;
     public Buffer buffer;
     private Optional<Order> order;
-    private List<Product> products;
     ProductRepositoryImpl productRepository;
     BasketRepositoryImpl basketRepositoryImpl;
     public static OrderRepositoryImpl orderRepositoryImpl;
@@ -38,11 +37,10 @@ public class Task4Test {
         product5 = new Product("peach", 15.0, "uk");
         product6 = new Product("olive", 16.0, "ua");
         productRepository = new ProductRepositoryImpl();
-        products = productRepository.getProducts();
         basket = new Basket();
         buffer = new Buffer();
         bufferRepository = new BufferRepositoryImpl();
-        basketRepositoryImpl = new BasketRepositoryImpl(bufferRepository, products);
+        basketRepositoryImpl = new BasketRepositoryImpl(productRepository, bufferRepository);
         orderRepositoryImpl = new OrderRepositoryImpl(basketRepositoryImpl.getBasket());
         basketServiceImpl = new BasketServiceImpl(basketRepositoryImpl);
         applicationContext.initAll();
@@ -60,7 +58,7 @@ public class Task4Test {
     public void buyBasketTest() {
         basketRepositoryImpl.addToBasket(product1.getName(), 1);
         basketRepositoryImpl.addToBasket(product3.getName(), 12);
-        double actual = basketServiceImpl.buyBasket();
+        double actual = basketServiceImpl.getBasketSum();
         Assert.assertEquals(0, basketRepositoryImpl.size());
         Assert.assertEquals(167.0, actual, 0);
         basket.clear();
@@ -68,7 +66,7 @@ public class Task4Test {
 
     @Test
     public void buyEmptyBasketTest() {
-        double actual = basketServiceImpl.buyBasket();
+        double actual = basketServiceImpl.getBasketSum();
         Assert.assertEquals(0, basketRepositoryImpl.size());
         Assert.assertEquals(-1, actual, 0);
         basket.clear();

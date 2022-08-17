@@ -11,7 +11,7 @@ import java.util.Optional;
 public class Utils {
     public static void printProducts(List<Product> products) {
         if (products.isEmpty()) {
-            System.out.println("В нашей базе нет продуктов(");
+            System.out.println("There are no products in our database(");
             return;
         }
         for (Product product : products) {
@@ -21,7 +21,7 @@ public class Utils {
 
     public static void printBasket(Basket basket) {
         if (basket.isEmpty()) {
-            System.out.println("В нашей базе нет продуктов(");
+            System.out.println("There are no products in our basket(");
             return;
         }
         System.out.println(basket);
@@ -29,7 +29,7 @@ public class Utils {
 
     public static void printBuffer(Buffer buffer) {
         if (buffer.isEmpty()) {
-            System.out.println("В буфер нет продуктов(");
+            System.out.println("There are no products in the buffer(");
             return;
         }
         System.out.println(buffer);
@@ -37,7 +37,7 @@ public class Utils {
 
     public static void printOrder(Optional<Order> order) {
         if (order.isEmpty()) {
-            System.out.println("Заказ не был найден(");
+            System.out.println("Order not found(");
             return;
         }
         System.out.println(order);
@@ -45,7 +45,7 @@ public class Utils {
 
     public static void printOrdersByRange(List<Order> orders) {
         if (orders.isEmpty()) {
-            System.out.println("Ничего не было найдено(");
+            System.out.println("Nothing was found(");
             return;
         }
         System.out.println(orders);
