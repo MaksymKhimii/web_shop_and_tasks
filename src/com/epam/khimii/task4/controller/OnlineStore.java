@@ -30,8 +30,8 @@ public class OnlineStore {
                 applicationContext.getProductService(), scanner));
         commands.put("3", new ShowBasketCommand(applicationContext.getBasketRepositoryImpl()));
         commands.put("4", new BuyBasketCommand(applicationContext.getBasketServiceImpl()));
-        commands.put("5", new ShowBufferCommand(applicationContext.getBufferRepositoryImpl()));
-        commands.put("6", new DoOrderCommand(applicationContext.getOrderRepositoryImpl()));
+        commands.put("5", new ShowBufferCommand(applicationContext.getBufferService()));
+        commands.put("6", new DoOrderCommand(applicationContext.getOrderServiceImpl()));
         commands.put("7", new ShowOrderByTimeRangeCommand(applicationContext.getOrderServiceImpl(), scanner));
         commands.put("8", new ShowOrderByTimeCommand(applicationContext.getOrderServiceImpl(), scanner));
     }

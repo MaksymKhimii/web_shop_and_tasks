@@ -10,7 +10,9 @@ import com.epam.khimii.task4.repository.impl.BufferRepositoryImpl;
 import com.epam.khimii.task4.repository.impl.OrderRepositoryImpl;
 import com.epam.khimii.task4.repository.impl.ProductRepositoryImpl;
 import com.epam.khimii.task4.service.BasketServiceImpl;
+import com.epam.khimii.task4.service.BufferService;
 import com.epam.khimii.task4.service.IBasketService;
+import com.epam.khimii.task4.service.IBufferService;
 import com.epam.khimii.task4.service.IOrderService;
 import com.epam.khimii.task4.service.IProductService;
 import com.epam.khimii.task4.service.OrderServiceImpl;
@@ -35,6 +37,8 @@ public class ApplicationContext {
     private IBasketService basketServiceImpl;
     private IOrderService orderServiceImpl;
     private IProductService productService;
+    private IBufferService bufferService;
+
     private final List<Product> products = new ArrayList<>() {{
         add(product1);
         add(product2);
@@ -76,6 +80,10 @@ public class ApplicationContext {
         return productService;
     }
 
+    public IBufferService getBufferService() {
+        return bufferService;
+    }
+
     public void initAll() {
         this.productRepositoryImpl = new ProductRepositoryImpl();
         this.productService = new ProductServiceImpl(productRepositoryImpl);
@@ -85,5 +93,6 @@ public class ApplicationContext {
         this.orderRepositoryImpl = new OrderRepositoryImpl(basketRepositoryImpl.getBasket());
         this.orderServiceImpl = new OrderServiceImpl(orderRepositoryImpl);
         this.basketServiceImpl = new BasketServiceImpl(basketRepositoryImpl);
+        this.bufferService = new BufferService(bufferRepositoryImpl);
     }
 }

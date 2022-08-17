@@ -11,7 +11,7 @@ public class BuyBasketCommand implements Command {
 
     @Override
     public void execute() {
-        double sum = basketServiceImpl.getBasketSum();
+        double sum = basketServiceImpl.buyBasket();
         if (sum == -1) {
             System.out.println("Basket is empty, you can't buy it");
             return;

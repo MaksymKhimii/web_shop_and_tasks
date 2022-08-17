@@ -6,6 +6,7 @@ import com.epam.khimii.task4.repository.IBufferRepository;
 public class BufferRepositoryImpl implements IBufferRepository {
     private Buffer buffer = new Buffer();
 
+    @Override
     public void put(String key, Integer value) {
         buffer.put(key, value);
     }

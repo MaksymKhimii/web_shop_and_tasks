@@ -58,7 +58,7 @@ public class Task4Test {
     public void buyBasketTest() {
         basketRepositoryImpl.addToBasket(product1.getName(), 1);
         basketRepositoryImpl.addToBasket(product3.getName(), 12);
-        double actual = basketServiceImpl.getBasketSum();
+        double actual = basketServiceImpl.buyBasket();
         Assert.assertEquals(0, basketRepositoryImpl.size());
         Assert.assertEquals(167.0, actual, 0);
         basket.clear();
@@ -66,7 +66,7 @@ public class Task4Test {
 
     @Test
     public void buyEmptyBasketTest() {
-        double actual = basketServiceImpl.getBasketSum();
+        double actual = basketServiceImpl.buyBasket();
         Assert.assertEquals(0, basketRepositoryImpl.size());
         Assert.assertEquals(-1, actual, 0);
         basket.clear();

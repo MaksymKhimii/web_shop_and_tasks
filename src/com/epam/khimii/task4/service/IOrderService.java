@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface IOrderService {
     Optional<Order> findOrderByTime(LocalDateTime date);
 
-    List<Order> findOrderByTimeRange(LocalDateTime date1,
-                                     LocalDateTime date2);
+    List<Order> findOrderByTimeRange(LocalDateTime dateBefore,
+                                     LocalDateTime dateAfter);
+
+    void doOrder(LocalDateTime date);
 }

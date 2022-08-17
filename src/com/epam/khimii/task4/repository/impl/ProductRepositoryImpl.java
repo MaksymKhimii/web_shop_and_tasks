@@ -26,9 +26,7 @@ public class ProductRepositoryImpl implements IProductRepository {
 
     @Override
     public void addAll(List<Product> newProducts) {
-        for (Product p : newProducts) {
-            products.add(p);
-        }
+        products.addAll(newProducts);
     }
 
     @Override

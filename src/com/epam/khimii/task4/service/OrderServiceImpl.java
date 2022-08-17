@@ -15,6 +15,11 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    public void doOrder(LocalDateTime date) {
+        orderRepositoryImpl.doOrder(date);
+    }
+
+    @Override
     public Optional<Order> findOrderByTime(LocalDateTime date) {
         return orderRepositoryImpl.getOrderByTime(date);
     }
@@ -23,4 +28,6 @@ public class OrderServiceImpl implements IOrderService {
     public List<Order> findOrderByTimeRange(LocalDateTime dateBefore, LocalDateTime dateAfter) {
         return orderRepositoryImpl.getOrderByRange(dateBefore, dateAfter);
     }
+
+
 }

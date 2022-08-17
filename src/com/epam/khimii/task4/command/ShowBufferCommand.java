@@ -1,18 +1,18 @@
 package com.epam.khimii.task4.command;
 
 import com.epam.khimii.task4.parts.Utils;
-import com.epam.khimii.task4.repository.IBufferRepository;
+import com.epam.khimii.task4.service.IBufferService;
 
 public class ShowBufferCommand implements Command {
-    private IBufferRepository bufferRepository;
+    private IBufferService bufferService;
 
-    public ShowBufferCommand(IBufferRepository bufferRepository) {
-        this.bufferRepository = bufferRepository;
+    public ShowBufferCommand(IBufferService bufferService) {
+        this.bufferService = bufferService;
     }
 
     @Override
     public void execute() {
         System.out.println("Last 5 products in buffer: ");
-        Utils.printBuffer(bufferRepository.getBuffer());
+        Utils.printBuffer(bufferService.getBuffer());
     }
 }

@@ -24,10 +24,10 @@ public class OrderRepositoryImpl implements IOrderRepository {
     }
 
     @Override
-    public List<Order> getOrderByRange(LocalDateTime date1, LocalDateTime date2) {
+    public List<Order> getOrderByRange(LocalDateTime dateBefore, LocalDateTime dateAfter) {
         List<Order> neededOrder = new ArrayList<>();
         for (Order entry : orders) {
-            if (entry.getDate().isAfter(date1) && entry.getDate().isBefore(date2)) {
+            if (entry.getDate().isAfter(dateBefore) && entry.getDate().isBefore(dateAfter)) {
                 neededOrder.add(entry);
             }
         }

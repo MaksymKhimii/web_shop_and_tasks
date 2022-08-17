@@ -17,7 +17,7 @@ public class BasketServiceImpl implements IBasketService {
     }
 
     @Override
-    public double getBasketSum() {
+    public double buyBasket() {
         if (basketRepositoryImpl.isEmpty()) {
             return -1;
         }
