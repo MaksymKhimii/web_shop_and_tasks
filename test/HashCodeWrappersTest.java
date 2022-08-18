@@ -46,9 +46,9 @@ public class HashCodeWrappersTest {
         map.put(lengthWrapper12, product12);
         map.put(lengthWrapper13, product13);
         ArrayList<Product> expected = new ArrayList<>();
-        expected.add(product10);
         expected.add(product11);
         expected.add(product12);
+        expected.add(product10);
         expected.add(product13);
         ArrayList<Product> actual = new ArrayList<>();
         Iterator<Map.Entry<StringLengthHashCodeWrapper, Product>> entries = map.entrySet().iterator();
@@ -58,7 +58,8 @@ public class HashCodeWrappersTest {
         }
         Assert.assertArrayEquals(expected.toArray(), actual.toArray());
     }
-    
+
+
     @Test
     public void shouldBeSameLinkedHashMapByLength() {
         LinkedHashMap<StringLengthHashCodeWrapper, Product> map = new LinkedHashMap<>();
