@@ -1,9 +1,9 @@
 package com.epam.khimii.task5.parameters;
 
-import com.epam.khimii.task5.util.Parameter;
+import com.epam.khimii.task5.chain.IFilter;
 
-import java.util.Map;
+import java.text.ParseException;
 
 public interface InputParameter {
-    void execute(Map<Parameter, String> parameters);
+    IFilter execute(IFilter filter) throws ParseException;
 }

@@ -31,11 +31,9 @@ public class ReadTextFileWrapper implements Iterable<String>, Closeable {
     }
 
     private class FileIterator implements Iterator<String> {
-        private String line;
-
         public FileIterator() {
             try {
-                line = sc.readLine();
+                sc.read();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -43,20 +41,28 @@ public class ReadTextFileWrapper implements Iterable<String>, Closeable {
 
         @Override
         public boolean hasNext() {
-            return line != null;
+            try {
+                String s = String.valueOf(sc.read());
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
 
         @Override
         public String next() {
             if (hasNext()) {
-                String temp = line;
                 try {
-                    line = sc.readLine();
+                    return sc.readLine();
                 } catch (IOException e) {
-                    System.out.println("Line not found");
+                    try {
+                        throw new LineNotFoundException("Line not found");
+                    } catch (LineNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
                     e.printStackTrace();
                 }
-                return temp;
             }
             throw new NoSuchElementException();
         }

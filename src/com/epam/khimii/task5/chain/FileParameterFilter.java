@@ -1,22 +1,21 @@
 package com.epam.khimii.task5.chain;
 
 import java.io.File;
-import java.util.List;
 
-public abstract class FileParameterFilter {
-    private FileParameterFilter nextHandler;
+public abstract class FileParameterFilter implements IFilter {
+    private final IFilter nextHandler;
 
-    public abstract List<File> handle(List<File> files);
-
-    public void setNextHandler(FileParameterFilter nextHandler) {
+    public FileParameterFilter(IFilter nextHandler) {
         this.nextHandler = nextHandler;
     }
 
-    public List<File> handlerManager(List<File> files) {
-        files = handle(files);
-        if (nextHandler != null) {
-            files = nextHandler.handlerManager(files);
+    public abstract boolean handle(File file);
+
+    @Override
+    public boolean filter(File file) {
+        if (handle(file)) {
+            return nextHandler.filter(file);
         }
-        return files;
+        return false;
     }
 }

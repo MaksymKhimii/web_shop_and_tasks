@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ParametersContainer {
-    private ArrayList<InputParameter> parameters = new ArrayList<>();
-    Scanner scanner = new Scanner(System.in);
+    private final ArrayList<InputParameter> parameters = new ArrayList<>();
+    private static final Scanner scanner = new Scanner(System.in);
+
     public ParametersContainer() {
         parameters.add(new InputNameParameter(scanner));
         parameters.add(new InputExtensionParameter(scanner));

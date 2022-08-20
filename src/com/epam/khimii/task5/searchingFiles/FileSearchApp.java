@@ -1,31 +1,31 @@
 package com.epam.khimii.task5.searchingFiles;
 
+import com.epam.khimii.task5.chain.DefaultFilter;
+import com.epam.khimii.task5.chain.IFilter;
 import com.epam.khimii.task5.container.ParametersContainer;
 import com.epam.khimii.task5.parameters.InputParameter;
-import com.epam.khimii.task5.util.Parameter;
 
 import java.io.File;
-import java.util.LinkedHashMap;
+import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 
 public class FileSearchApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         //here must be directory where this program
         // should find or not find needed file
         FileSearchApp.searchingFilesByPath("D:\\epam\\LabMain\\");
-        
     }
-    public static void searchingFilesByPath(String path) {
-        Map<Parameter, String> parameters = new LinkedHashMap<>();
+
+    public static void searchingFilesByPath(String path) throws ParseException {
+        IFilter filter = new DefaultFilter();
         for (InputParameter parameter : new ParametersContainer().getParameters()) {
-            parameter.execute(parameters);
+            filter = parameter.execute(filter);
         }
-        FileFilterByParameters file = new FileFilterByParameters();
-        file.addParameters(parameters);
+        FileFilterByParameters fileFilter = new FileFilterByParameters(filter);
+        List<File> list = fileFilter.searchFilesByFilter(path);
         System.out.println("Found files:");
-        printFiles(file.search(path));
+        printFiles(list);
     }
 
     public static void printFiles(List<File> files) {
