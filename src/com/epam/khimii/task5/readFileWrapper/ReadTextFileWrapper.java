@@ -9,14 +9,13 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ReadTextFileWrapper implements Iterable<String>, Closeable {
-    private RandomAccessFile sc;
+    private final RandomAccessFile sc;
 
     public ReadTextFileWrapper(String fileName) {
         try {
             sc = new RandomAccessFile(new File(fileName), "r");
         } catch (FileNotFoundException e) {
-            System.out.println("File with this name was not found!");
-            e.printStackTrace();
+            throw new FileStateException("File was not found");
         }
     }
 
@@ -31,23 +30,13 @@ public class ReadTextFileWrapper implements Iterable<String>, Closeable {
     }
 
     private class FileIterator implements Iterator<String> {
-        public FileIterator() {
-            try {
-                sc.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         @Override
         public boolean hasNext() {
             try {
-                String s = String.valueOf(sc.read());
-                return true;
+                return sc.read() != -1;
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new FileStateException("Line not found");
             }
-            return false;
         }
 
         @Override
@@ -56,12 +45,7 @@ public class ReadTextFileWrapper implements Iterable<String>, Closeable {
                 try {
                     return sc.readLine();
                 } catch (IOException e) {
-                    try {
-                        throw new LineNotFoundException("Line not found");
-                    } catch (LineNotFoundException ex) {
-                        ex.printStackTrace();
-                    }
-                    e.printStackTrace();
+                    throw new FileStateException("Line not found");
                 }
             }
             throw new NoSuchElementException();
