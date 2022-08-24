@@ -1,10 +1,10 @@
-package com.epam.khimii.task6.container;
+package com.epam.khimii.task4.container;
 
-import com.epam.khimii.task6.constants.Constants;
-import com.epam.khimii.task6.factory_input_data.AccessoriesInputData;
-import com.epam.khimii.task6.factory_input_data.ComputerPartInputData;
-import com.epam.khimii.task6.factory_input_data.GraphicsCardInputData;
-import com.epam.khimii.task6.factory_input_data.ProductInputData;
+import com.epam.khimii.task4.parts.constants.Constants;
+import com.epam.khimii.task4.factory_input_data.AccessoriesInputData;
+import com.epam.khimii.task4.factory_input_data.ComputerPartInputData;
+import com.epam.khimii.task4.factory_input_data.GraphicsCardInputData;
+import com.epam.khimii.task4.factory_input_data.ProductInputData;
 
 import java.util.HashMap;
 import java.util.Map;

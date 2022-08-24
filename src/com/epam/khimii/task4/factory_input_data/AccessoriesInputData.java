@@ -1,18 +1,14 @@
-package com.epam.khimii.task6.factory_input_data;
+package com.epam.khimii.task4.factory_input_data;
 
 import com.epam.khimii.task1.entity.Accessory;
 import com.epam.khimii.task1.entity.Product;
-import com.epam.khimii.task6.constants.Constants;
+import com.epam.khimii.task4.parts.constants.Constants;
 
-import java.util.Scanner;
-
-import static com.epam.khimii.task6.AddingProductsToCatalog.scanner;
 
 public class AccessoriesInputData extends ProductInputData {
     @Override
     public Product inputDataFromConsole() {
         Product p = super.inputDataFromConsole();
-        System.out.println(Constants.INPUT_TYPE);
         String type = scanner.nextLine();
         System.out.println(Constants.INPUT_BRAND);
         String brand = scanner.nextLine();

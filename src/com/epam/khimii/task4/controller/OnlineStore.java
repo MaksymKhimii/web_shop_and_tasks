@@ -1,5 +1,6 @@
 package com.epam.khimii.task4.controller;
 
+import com.epam.khimii.task4.command.AddProductToList;
 import com.epam.khimii.task4.command.Command;
 import com.epam.khimii.task4.command.AddProdToBasketCommand;
 import com.epam.khimii.task4.command.BuyBasketCommand;
@@ -11,6 +12,7 @@ import com.epam.khimii.task4.command.ShowBufferCommand;
 import com.epam.khimii.task4.command.ShowOrderByTimeRangeCommand;
 import com.epam.khimii.task4.command.ShowProductsCommand;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,12 +21,12 @@ import java.util.Scanner;
 public class OnlineStore {
     private final Map<String, Command> commands = new HashMap<>();
     private boolean finish = false;
-    private ApplicationContext applicationContext = new ApplicationContext();
+    private final ApplicationContext applicationContext = new ApplicationContext();
     private Scanner scanner;
 
-    public void init() {
+    public void init() throws IOException, ClassNotFoundException {
         applicationContext.initAll();
-        scanner = applicationContext.getScanner();
+        scanner = new Scanner(System.in);
         commands.put("1", new ShowProductsCommand(applicationContext.getProductRepositoryImpl()));
         commands.put("2", new AddProdToBasketCommand(applicationContext.getBasketServiceImpl(),
                 applicationContext.getProductService(), scanner));
@@ -34,9 +36,10 @@ public class OnlineStore {
         commands.put("6", new DoOrderCommand(applicationContext.getOrderServiceImpl()));
         commands.put("7", new ShowOrderByTimeRangeCommand(applicationContext.getOrderServiceImpl(), scanner));
         commands.put("8", new ShowOrderByTimeCommand(applicationContext.getOrderServiceImpl(), scanner));
+        commands.put("9", new AddProductToList(applicationContext.getProductService(), applicationContext.getProducts(), scanner));
     }
 
-    public void choice() {
+    public void choice() throws IOException, ClassNotFoundException {
         init();
         String myChoice;
         while (!finish) {
@@ -49,11 +52,13 @@ public class OnlineStore {
             System.out.println("6 - make an order");
             System.out.println("7 - find order by time range");
             System.out.println("8 - find order by specified date");
+            System.out.println("9 - add item to product's list");
             System.out.println("0 - Exit ");
             System.out.println("------------------------------------------------------------------------");
             System.out.println("What's your choice?");
             myChoice = scanner.nextLine();
             if (Objects.equals(myChoice, "0")) {
+                applicationContext.getProductContainerFilesHandler().save(applicationContext.getProductRepositoryImpl().getProducts(), "fileForTask6.txt");
                 break;
             }
             Command command = commands.getOrDefault(myChoice, new NoCommand());

@@ -1,12 +1,8 @@
-package com.epam.khimii.task6.factory_input_data;
+package com.epam.khimii.task4.factory_input_data;
 
 import com.epam.khimii.task1.entity.ComputerPart;
 import com.epam.khimii.task1.entity.Product;
-import com.epam.khimii.task6.constants.Constants;
-
-import java.util.Scanner;
-
-import static com.epam.khimii.task6.AddingProductsToCatalog.scanner;
+import com.epam.khimii.task4.parts.constants.Constants;
 
 public class ComputerPartInputData extends ProductInputData {
     @Override

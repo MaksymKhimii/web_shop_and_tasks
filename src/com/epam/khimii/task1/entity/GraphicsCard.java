@@ -1,6 +1,5 @@
 package com.epam.khimii.task1.entity;
 
-
 import java.math.BigDecimal;
 import java.util.Objects;
 

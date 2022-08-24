@@ -1,6 +1,8 @@
 package com.epam.khimii.task4.controller;
 
-import com.epam.khimii.task4.entity.Product;
+
+import com.epam.khimii.task1.entity.Product;
+import com.epam.khimii.task4.file_handler.FileHandler;
 import com.epam.khimii.task4.repository.IBasketRepository;
 import com.epam.khimii.task4.repository.IBufferRepository;
 import com.epam.khimii.task4.repository.IOrderRepository;
@@ -18,18 +20,19 @@ import com.epam.khimii.task4.service.IProductService;
 import com.epam.khimii.task4.service.OrderServiceImpl;
 import com.epam.khimii.task4.service.ProductServiceImpl;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class ApplicationContext {
-    private static final Product product1 = new Product("apple", 11.0, "uk");
-    private static final Product product2 = new Product("banana", 12.0, "uk");
-    private static final Product product3 = new Product("potato", 13.0, "uk");
-    private static final Product product4 = new Product("tomato", 14.0, "uk");
-    private static final Product product5 = new Product("peach", 15.0, "uk");
-    private static final Product product6 = new Product("olive", 16.0, "ua");
-    private Scanner scanner = new Scanner(System.in);
+public class ApplicationContext implements Serializable {
+    private static final Product product1 = new Product("apple", new BigDecimal(11.0), "uk");
+    private static final Product product2 = new Product("banana", new BigDecimal(12.0), "uk");
+    private static final Product product3 = new Product("potato", new BigDecimal(13.0), "uk");
+    private static final Product product4 = new Product("tomato", new BigDecimal(14.0), "uk");
+    private static final Product product5 = new Product("peach", new BigDecimal(15.0), "uk");
+    private static final Product product6 = new Product("olive", new BigDecimal(16.0), "ua");
     private IProductRepository productRepositoryImpl;
     private IBasketRepository basketRepositoryImpl;
     private IBufferRepository bufferRepositoryImpl;
@@ -38,18 +41,12 @@ public class ApplicationContext {
     private IOrderService orderServiceImpl;
     private IProductService productService;
     private IBufferService bufferService;
+    private FileHandler fileHandler;
 
-    private final List<Product> products = new ArrayList<>() {{
-        add(product1);
-        add(product2);
-        add(product3);
-        add(product4);
-        add(product5);
-        add(product6);
-    }};
+    private List<Product> products = new ArrayList<>();
 
-    public Scanner getScanner() {
-        return scanner;
+    public List<Product> getProducts() {
+        return products;
     }
 
     public IProductRepository getProductRepositoryImpl() {
@@ -84,9 +81,23 @@ public class ApplicationContext {
         return bufferService;
     }
 
-    public void initAll() {
+    public FileHandler getProductContainerFilesHandler() {
+        return fileHandler;
+    }
+
+    public void initAll() throws IOException, ClassNotFoundException {
         this.productRepositoryImpl = new ProductRepositoryImpl();
         this.productService = new ProductServiceImpl(productRepositoryImpl);
+        this.fileHandler = new FileHandler();
+        products = fileHandler.load("fileForTask6.txt");
+        if (products.isEmpty()) {
+            products.add(product1);
+            products.add(product2);
+            products.add(product3);
+            products.add(product4);
+            products.add(product5);
+            products.add(product6);
+        }
         productService.productInit(products);
         this.bufferRepositoryImpl = new BufferRepositoryImpl();
         this.basketRepositoryImpl = new BasketRepositoryImpl(productRepositoryImpl, bufferRepositoryImpl);

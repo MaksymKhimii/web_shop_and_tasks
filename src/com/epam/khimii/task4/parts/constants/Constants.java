@@ -1,8 +1,8 @@
-package com.epam.khimii.task6.constants;
+package com.epam.khimii.task4.parts.constants;
 
 /**
- *  messages displayed to the user
- *  and other constant parameters
+ * messages displayed to the user
+ * and other constant parameters
  */
 public class Constants {
     public static final String INPUT_NAME = "Input product name";
@@ -35,8 +35,8 @@ public class Constants {
     public static final int RANDOM_BOUND = 1000000;
     public static final int COUNTRY_COUNT = 19;
 
-    public static final String PRODUCT_FIELD_CATEGORY="Category";
-    public static final String PRODUCT_FIELD_PURPOSE="Purpose";
-    public static final String PRODUCT_FIELD_TYPE="Type";
-    public static final String PRODUCT_FIELD_BRAND="Brand";
+    public static final String PRODUCT_FIELD_CATEGORY = "Category";
+    public static final String PRODUCT_FIELD_PURPOSE = "Purpose";
+    public static final String PRODUCT_FIELD_TYPE = "Type";
+    public static final String PRODUCT_FIELD_BRAND = "Brand";
 }

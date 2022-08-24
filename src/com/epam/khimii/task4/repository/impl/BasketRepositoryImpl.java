@@ -1,17 +1,19 @@
 package com.epam.khimii.task4.repository.impl;
 
+import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.entity.Basket;
-import com.epam.khimii.task4.entity.Product;
+
 import com.epam.khimii.task4.repository.IBasketRepository;
 import com.epam.khimii.task4.repository.IBufferRepository;
 import com.epam.khimii.task4.repository.IProductRepository;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.khimii.task4.entity.Basket.isExists;
 
-public class BasketRepositoryImpl implements IBasketRepository {
+public class BasketRepositoryImpl implements IBasketRepository, Serializable {
     private Basket basket = new Basket();
     private IBufferRepository bufferRepositoryImpl;
     private IProductRepository productRepositoryImpl;
@@ -65,7 +67,7 @@ public class BasketRepositoryImpl implements IBasketRepository {
             int quantity = entry.getValue();
             for (Product product : productRepositoryImpl.getProducts()) {
                 if (product.getName().equals(prodInBasket)) {
-                    forCalculation.put(product.getPrice(), quantity);
+                    forCalculation.put(product.getPrice().doubleValue(), quantity);
                 }
             }
         }

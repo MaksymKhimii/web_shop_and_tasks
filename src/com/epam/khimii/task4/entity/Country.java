@@ -1,4 +1,4 @@
-package com.epam.khimii.task6.fill_product_strategy.random.country;
+package com.epam.khimii.task4.entity;
 
 public enum Country {
     AUSTRALIA,

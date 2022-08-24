@@ -3,7 +3,9 @@ package com.epam.khimii.task4.repository.impl;
 import com.epam.khimii.task4.entity.Buffer;
 import com.epam.khimii.task4.repository.IBufferRepository;
 
-public class BufferRepositoryImpl implements IBufferRepository {
+import java.io.Serializable;
+
+public class BufferRepositoryImpl implements IBufferRepository, Serializable {
     private Buffer buffer = new Buffer();
 
     @Override

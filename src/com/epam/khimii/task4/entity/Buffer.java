@@ -1,10 +1,11 @@
 package com.epam.khimii.task4.entity;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class Buffer {
+public class Buffer implements Serializable {
     private static final int MAX = 5;
     private static Map<String, Integer> buffer =
             new LinkedHashMap<>() {

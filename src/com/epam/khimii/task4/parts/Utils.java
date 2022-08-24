@@ -1,9 +1,10 @@
 package com.epam.khimii.task4.parts;
 
+import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.entity.Basket;
 import com.epam.khimii.task4.entity.Buffer;
 import com.epam.khimii.task4.entity.Order;
-import com.epam.khimii.task4.entity.Product;
+
 
 import java.util.List;
 import java.util.Optional;

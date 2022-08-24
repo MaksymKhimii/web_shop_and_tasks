@@ -42,7 +42,7 @@ public class InputCheck {
             return -1;
         }
         int answer = Integer.parseInt(string);
-        if (answer <= 0) {
+        if (answer < 0) {
             return -1;
         }
         return answer;
