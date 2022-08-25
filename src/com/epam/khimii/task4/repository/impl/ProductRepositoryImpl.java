@@ -3,11 +3,10 @@ package com.epam.khimii.task4.repository.impl;
 import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.repository.IProductRepository;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductRepositoryImpl implements IProductRepository, Serializable {
+public class ProductRepositoryImpl implements IProductRepository {
     private List<Product> products = new ArrayList<>();
 
     @Override

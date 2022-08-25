@@ -6,7 +6,6 @@ import com.epam.khimii.task4.container.ProductInputDataContainer;
 import com.epam.khimii.task4.factory_input_data.ProductInputData;
 import com.epam.khimii.task4.strategy.InputProductStrategy;
 
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -14,25 +13,24 @@ import java.util.Scanner;
  * and use appropriate class to fill product container.
  */
 public class InputFromConsoleProductStrategy implements InputProductStrategy {
-    private ProductInputDataContainer container = new ProductInputDataContainer();
     private Scanner scanner;
+    private ProductInputDataContainer container;
+
 
     public InputFromConsoleProductStrategy(Scanner scanner) {
         this.scanner = scanner;
+        container = new ProductInputDataContainer(scanner);
     }
 
-
-    public Product generateProduct(List<Product> products) {
+    public Product generateProduct() {
         ProductInputData strategy = container.getInputData(getType());
         return strategy.inputDataFromConsole();
     }
 
-    @Override
-    public int getType() {
+    private int getType() {
         System.out.println(Constants.INPUT_TYPE_PRODUCT);
         container.getInputDataMap().forEach((k, v) -> System.out.println(k + " - " + v));
-        int code = (scanner.nextInt());
-        return code;
+        return (scanner.nextInt());
     }
 }
 

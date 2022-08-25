@@ -4,15 +4,26 @@ import com.epam.khimii.task1.entity.ComputerPart;
 import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.parts.constants.Constants;
 
+import java.util.Scanner;
+
 public class ComputerPartInputData extends ProductInputData {
+    public ComputerPartInputData(Scanner scanner) {
+        super(scanner);
+    }
+
+    public String getCategory() {
+        System.out.println(Constants.INPUT_CATEGORY);
+        return scanner.nextLine();
+    }
+
+    public String getPurpose() {
+        System.out.println(Constants.INPUT_PURPOSE);
+        return scanner.nextLine();
+    }
+
     @Override
     public Product inputDataFromConsole() {
-        Product p = super.inputDataFromConsole();
-        System.out.println(Constants.INPUT_CATEGORY);
-        String category = scanner.nextLine();
-        System.out.println(Constants.INPUT_PURPOSE);
-        String purpose = scanner.nextLine();
-        return new ComputerPart(p.getName(), p.getPrice(), p.getCountry(), category, purpose);
+        return new ComputerPart(super.getName(), super.getPrice(), super.getCountry(), getCategory(), getPurpose());
     }
 
     @Override
@@ -20,4 +31,3 @@ public class ComputerPartInputData extends ProductInputData {
         return Constants.COMPUTER_PART;
     }
 }
-

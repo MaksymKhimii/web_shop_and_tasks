@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
 
@@ -25,7 +24,7 @@ public class Task6Test {
     private Product product1;
 
     @Before
-    public void Before() throws IOException, ClassNotFoundException {
+    public void Before() {
         products = new UniqueProductArrayList<>();
         products.addAll(new FileHandler().load("fileForTask6.txt"));
         product1 = new Product("apple", new BigDecimal("10"), "UKRAINE");
@@ -39,9 +38,9 @@ public class Task6Test {
     }
 
     @Test
-    public void shouldFillNewRandomGoodsTest() throws IOException {
-        InputProductStrategy strategy = (new FillStrategyContainer(products, scanner)).getStrategies(1);
-        Product newProd = strategy.generateProduct(products);
+    public void shouldFillNewRandomGoodsTest() {
+        InputProductStrategy strategy = (new FillStrategyContainer(scanner)).getStrategies(1);
+        Product newProd = strategy.generateProduct();
         products.add(newProd);
         new FileHandler().save(products, "fileForTask6Save.txt");
         Assert.assertEquals(6, products.size());

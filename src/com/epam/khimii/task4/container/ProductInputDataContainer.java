@@ -8,19 +8,26 @@ import com.epam.khimii.task4.factory_input_data.ProductInputData;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Contains map of ProductInputData.
+ *
  * @see ProductInputData
  */
 public class ProductInputDataContainer {
-    private final Map<Integer, ProductInputData> inputDataMap = new HashMap<>();
+    private Scanner scanner;
 
-    public ProductInputDataContainer() {
-        inputDataMap.put(Constants.PRODUCT_INPUT_DATA_NUMBER, new ProductInputData());
-        inputDataMap.put(Constants.COMPUTER_PART_INPUT_DATA_NUMBER, new ComputerPartInputData());
-        inputDataMap.put(Constants.ACCESSORIES_INPUT_DATA_NUMBER, new AccessoriesInputData());
-        inputDataMap.put(Constants.GRAPHICS_CARD_INPUT_DATA_NUMBER, new GraphicsCardInputData());
+    private final Map<Integer, ProductInputData> inputDataMap = new HashMap<>() {{
+        put(Constants.PRODUCT_INPUT_DATA_NUMBER, new ProductInputData(scanner));
+        put(Constants.COMPUTER_PART_INPUT_DATA_NUMBER, new ComputerPartInputData(scanner));
+        put(Constants.ACCESSORIES_INPUT_DATA_NUMBER, new AccessoriesInputData(scanner));
+        put(Constants.GRAPHICS_CARD_INPUT_DATA_NUMBER, new GraphicsCardInputData(scanner));
+    }};
+
+
+    public ProductInputDataContainer(Scanner scanner) {
+        this.scanner = scanner;
     }
 
     public Map<Integer, ProductInputData> getInputDataMap() {
@@ -28,6 +35,6 @@ public class ProductInputDataContainer {
     }
 
     public ProductInputData getInputData(int code) {
-        return !inputDataMap.containsKey(code) ? new ProductInputData() : inputDataMap.get(code);
+        return !inputDataMap.containsKey(code) ? new ProductInputData(scanner) : inputDataMap.get(code);
     }
 }

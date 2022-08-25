@@ -6,26 +6,30 @@ import com.epam.khimii.task4.parts.InputCheck;
 import com.epam.khimii.task4.service.IProductService;
 import com.epam.khimii.task4.strategy.InputProductStrategy;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class AddProductToList implements Command {
-    private List<Product> products;
     private Scanner scanner;
     private IProductService productService;
+    private FillStrategyContainer fillStrategyContainer;
 
-    public AddProductToList(IProductService productService, List<Product> products, Scanner scanner) {
+    public AddProductToList(IProductService productService, FillStrategyContainer fillStrategyContainer,
+                            Scanner scanner) {
         this.productService = productService;
-        this.products = products;
+        this.fillStrategyContainer = fillStrategyContainer;
         this.scanner = scanner;
     }
 
     @Override
     public void execute() {
         System.out.println("Choose type of input of date: console input or generate data (0/1)");
-        int code = InputCheck.getNumber(scanner);
-        InputProductStrategy strategy = (new FillStrategyContainer(products, scanner)).getStrategies(code);
-        Product newProd = strategy.generateProduct(products);
+        int code = InputCheck.getStrategyCodeNumber(scanner);
+        if (code == -1) {
+            System.out.println("Wrong strategy(");
+            return;
+        }
+        InputProductStrategy strategy = fillStrategyContainer.getStrategies(code);
+        Product newProd = strategy.generateProduct();
         System.out.println("Command prod: " + newProd);
         productService.addProdToList(newProd);
         if (productService.isExists(newProd)) {

@@ -4,10 +4,9 @@ package com.epam.khimii.task4.service;
 import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.repository.IProductRepository;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class ProductServiceImpl implements IProductService, Serializable {
+public class ProductServiceImpl implements IProductService {
     private IProductRepository productRepository;
 
     public ProductServiceImpl(IProductRepository productRepository) {

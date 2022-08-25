@@ -11,16 +11,29 @@ import java.util.Scanner;
  * Use pattern "factory".
  */
 public class ProductInputData {
-    public Scanner scanner = new Scanner(System.in);
+    public Scanner scanner;
+
+    public ProductInputData(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    public String getName() {
+        System.out.println(Constants.INPUT_NAME);
+        return scanner.nextLine();
+    }
+
+    public BigDecimal getPrice() {
+        System.out.println(Constants.INPUT_PRICE);
+        return new BigDecimal(scanner.nextLine());
+    }
+
+    public String getCountry() {
+        System.out.println(Constants.INPUT_COUNTRY);
+        return scanner.nextLine();
+    }
 
     public Product inputDataFromConsole() {
-        System.out.println(Constants.INPUT_NAME);
-        String name = scanner.nextLine();
-        System.out.println(Constants.INPUT_PRICE);
-        String price = scanner.nextLine();
-        System.out.println(Constants.INPUT_COUNTRY);
-        String country = scanner.nextLine();
-        return new Product(name, new BigDecimal(price), country);
+        return new Product(getName(), getPrice(), getCountry());
     }
 
     @Override

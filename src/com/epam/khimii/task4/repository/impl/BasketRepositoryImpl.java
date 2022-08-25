@@ -7,13 +7,12 @@ import com.epam.khimii.task4.repository.IBasketRepository;
 import com.epam.khimii.task4.repository.IBufferRepository;
 import com.epam.khimii.task4.repository.IProductRepository;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.khimii.task4.entity.Basket.isExists;
 
-public class BasketRepositoryImpl implements IBasketRepository, Serializable {
+public class BasketRepositoryImpl implements IBasketRepository {
     private Basket basket = new Basket();
     private IBufferRepository bufferRepositoryImpl;
     private IProductRepository productRepositoryImpl;

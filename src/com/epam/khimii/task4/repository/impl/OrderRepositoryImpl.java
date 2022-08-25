@@ -4,14 +4,13 @@ import com.epam.khimii.task4.entity.Basket;
 import com.epam.khimii.task4.entity.Order;
 import com.epam.khimii.task4.repository.IOrderRepository;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
-public class OrderRepositoryImpl implements IOrderRepository, Serializable {
+public class OrderRepositoryImpl implements IOrderRepository {
     private List<Order> orders = new ArrayList<>();
     private Basket basket;
 

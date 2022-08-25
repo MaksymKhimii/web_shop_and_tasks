@@ -3,12 +3,11 @@ package com.epam.khimii.task4.service;
 import com.epam.khimii.task4.entity.Order;
 import com.epam.khimii.task4.repository.IOrderRepository;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderServiceImpl implements IOrderService, Serializable {
+public class OrderServiceImpl implements IOrderService {
     private IOrderRepository orderRepositoryImpl;
 
     public OrderServiceImpl(IOrderRepository orderRepositoryImpl) {

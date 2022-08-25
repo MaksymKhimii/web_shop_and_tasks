@@ -24,9 +24,13 @@ public class OnlineStore {
     private final ApplicationContext applicationContext = new ApplicationContext();
     private Scanner scanner;
 
-    public void init() throws IOException, ClassNotFoundException {
-        applicationContext.initAll();
-        scanner = new Scanner(System.in);
+    public void init() {
+        try {
+            applicationContext.initAll();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        scanner = applicationContext.getScanner();
         commands.put("1", new ShowProductsCommand(applicationContext.getProductRepositoryImpl()));
         commands.put("2", new AddProdToBasketCommand(applicationContext.getBasketServiceImpl(),
                 applicationContext.getProductService(), scanner));
@@ -36,7 +40,8 @@ public class OnlineStore {
         commands.put("6", new DoOrderCommand(applicationContext.getOrderServiceImpl()));
         commands.put("7", new ShowOrderByTimeRangeCommand(applicationContext.getOrderServiceImpl(), scanner));
         commands.put("8", new ShowOrderByTimeCommand(applicationContext.getOrderServiceImpl(), scanner));
-        commands.put("9", new AddProductToList(applicationContext.getProductService(), applicationContext.getProducts(), scanner));
+        commands.put("9", new AddProductToList(applicationContext.getProductService(), applicationContext.getFillStrategyContainer(),
+                applicationContext.getScanner()));
     }
 
     public void choice() throws IOException, ClassNotFoundException {

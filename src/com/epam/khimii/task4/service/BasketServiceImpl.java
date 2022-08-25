@@ -2,10 +2,9 @@ package com.epam.khimii.task4.service;
 
 import com.epam.khimii.task4.repository.IBasketRepository;
 
-import java.io.Serializable;
 import java.util.Map;
 
-public class BasketServiceImpl implements IBasketService, Serializable {
+public class BasketServiceImpl implements IBasketService {
     private IBasketRepository basketRepositoryImpl;
 
     public BasketServiceImpl(IBasketRepository basketRepositoryImpl) {
