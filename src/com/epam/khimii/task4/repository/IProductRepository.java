@@ -1,6 +1,6 @@
 package com.epam.khimii.task4.repository;
 
-import com.epam.khimii.task4.entity.Product;
+import com.epam.khimii.task1.entity.Product;
 
 import java.util.List;
 

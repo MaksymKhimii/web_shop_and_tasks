@@ -42,7 +42,19 @@ public class InputCheck {
             return -1;
         }
         int answer = Integer.parseInt(string);
-        if (answer <= 0) {
+        if (answer < 0) {
+            return -1;
+        }
+        return answer;
+    }
+
+    public static int getStrategyCodeNumber(Scanner scanner) {
+        String string = scanner.nextLine();
+        if (!isDigit(string)) {
+            return -1;
+        }
+        int answer = Integer.parseInt(string);
+        if (answer < 0 || answer > 1) {
             return -1;
         }
         return answer;

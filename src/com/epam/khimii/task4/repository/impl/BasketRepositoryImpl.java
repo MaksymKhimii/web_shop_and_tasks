@@ -1,7 +1,8 @@
 package com.epam.khimii.task4.repository.impl;
 
+import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.entity.Basket;
-import com.epam.khimii.task4.entity.Product;
+
 import com.epam.khimii.task4.repository.IBasketRepository;
 import com.epam.khimii.task4.repository.IBufferRepository;
 import com.epam.khimii.task4.repository.IProductRepository;
@@ -65,7 +66,7 @@ public class BasketRepositoryImpl implements IBasketRepository {
             int quantity = entry.getValue();
             for (Product product : productRepositoryImpl.getProducts()) {
                 if (product.getName().equals(prodInBasket)) {
-                    forCalculation.put(product.getPrice(), quantity);
+                    forCalculation.put(product.getPrice().doubleValue(), quantity);
                 }
             }
         }
