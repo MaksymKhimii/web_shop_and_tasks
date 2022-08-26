@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Task4Test {
     BufferRepositoryImpl bufferRepository;
 
     @Before
-    public void BeforeTest() throws IOException, ClassNotFoundException {
+    public void BeforeTest() {
         product1 = new Product("apple", new BigDecimal("11.0"), "uk");
         product2 = new Product("banana", new BigDecimal("12.0"), "uk");
         product3 = new Product("potato", new BigDecimal("13.0"), "uk");

@@ -5,6 +5,7 @@ import com.epam.khimii.task4.command.Command;
 import com.epam.khimii.task4.command.AddProdToBasketCommand;
 import com.epam.khimii.task4.command.BuyBasketCommand;
 import com.epam.khimii.task4.command.DoOrderCommand;
+import com.epam.khimii.task4.command.ExitCommand;
 import com.epam.khimii.task4.command.NoCommand;
 import com.epam.khimii.task4.command.ShowOrderByTimeCommand;
 import com.epam.khimii.task4.command.ShowBasketCommand;
@@ -25,12 +26,9 @@ public class OnlineStore {
     private Scanner scanner;
 
     public void init() {
-        try {
             applicationContext.initAll();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         scanner = applicationContext.getScanner();
+        commands.put("0", new ExitCommand(applicationContext.getFileHandler(), applicationContext.getProductRepositoryImpl()));
         commands.put("1", new ShowProductsCommand(applicationContext.getProductRepositoryImpl()));
         commands.put("2", new AddProdToBasketCommand(applicationContext.getBasketServiceImpl(),
                 applicationContext.getProductService(), scanner));
@@ -44,7 +42,7 @@ public class OnlineStore {
                 applicationContext.getScanner()));
     }
 
-    public void choice() throws IOException, ClassNotFoundException {
+    public void choice() {
         init();
         String myChoice;
         while (!finish) {
@@ -62,12 +60,11 @@ public class OnlineStore {
             System.out.println("------------------------------------------------------------------------");
             System.out.println("What's your choice?");
             myChoice = scanner.nextLine();
-            if (Objects.equals(myChoice, "0")) {
-                applicationContext.getProductContainerFilesHandler().save(applicationContext.getProductRepositoryImpl().getProducts(), "fileForTask6.txt");
-                break;
-            }
             Command command = commands.getOrDefault(myChoice, new NoCommand());
             command.execute();
+            if (Objects.equals(myChoice, "0")) {
+                break;
+            }
         }
     }
 }

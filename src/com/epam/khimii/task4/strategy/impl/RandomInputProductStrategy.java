@@ -12,29 +12,28 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * Generate product container of different randomize type of products
  */
 public class RandomInputProductStrategy implements InputProductStrategy {
-    private Random random;
-    private final Map<Integer, Product> generate = new HashMap<>() {{
-        put(Constants.PRODUCT_CREATOR_NUMBER, createProduct());
-        put(Constants.ACCESSORIES_CREATOR_NUMBER, createAccessories());
-        put(Constants.COMPUTER_PART_CREATOR_DATA_NUMBER, createComputerPart());
-        put(Constants.GRAPHICS_CARD_CREATOR_NUMBER, createGraphicsCard());
+    private Random random = new Random();
+    ;
+    private final Map<Integer, Supplier<Product>> generate = new HashMap<>() {{
+        put(Constants.PRODUCT_CREATOR_NUMBER, () -> createProduct());
+        put(Constants.ACCESSORIES_CREATOR_NUMBER, () -> createAccessories());
+        put(Constants.COMPUTER_PART_CREATOR_DATA_NUMBER, () -> createComputerPart());
+        put(Constants.GRAPHICS_CARD_CREATOR_NUMBER, () -> createGraphicsCard());
     }};
 
+
     public RandomInputProductStrategy() {
-        this.random = new Random();
     }
 
     public Product generateProduct() {
-        return this.generate.get(getType());
-    }
-
-    private int getType() {
-        return random.nextInt(4) + 1;
+        int type = random.nextInt(4) + 1;
+        return this.generate.get(type).get();
     }
 
     private Product createProduct() {
@@ -42,8 +41,8 @@ public class RandomInputProductStrategy implements InputProductStrategy {
     }
 
     private Product createComputerPart() {
-        return new ComputerPart(generateName(),generatePrice(), generateCountry(),
-                generateCategory(),generatePurpose());
+        return new ComputerPart(generateName(), generatePrice(), generateCountry(),
+                generateCategory(), generatePurpose());
     }
 
     private Product createAccessories() {
@@ -59,23 +58,23 @@ public class RandomInputProductStrategy implements InputProductStrategy {
                 Constants.INPUT_CONNECTOR + random.nextInt(Constants.RANDOM_BOUND));
     }
 
-    private String generateName(){
+    private String generateName() {
         return Constants.PRODUCT + random.nextInt(Constants.RANDOM_BOUND);
     }
 
-    private BigDecimal generatePrice(){
+    private BigDecimal generatePrice() {
         return new BigDecimal(random.nextInt(Constants.RANDOM_BOUND));
     }
 
-    private String generateCountry(){
+    private String generateCountry() {
         return Country.values()[random.nextInt(Constants.COUNTRY_COUNT)].name();
     }
 
-    private String generateCategory(){
+    private String generateCategory() {
         return Constants.PRODUCT_FIELD_CATEGORY + random.nextInt(Constants.RANDOM_BOUND);
     }
 
-    private String generatePurpose(){
+    private String generatePurpose() {
         return Constants.PRODUCT_FIELD_PURPOSE + random.nextInt(Constants.RANDOM_BOUND);
     }
 }

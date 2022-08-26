@@ -2,7 +2,7 @@ package com.epam.khimii.task4.controller;
 
 import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task4.container.FillStrategyContainer;
-import com.epam.khimii.task4.file_handler.FileHandler;
+import com.epam.khimii.task4.fileHandler.FileHandler;
 import com.epam.khimii.task4.repository.IBasketRepository;
 import com.epam.khimii.task4.repository.IBufferRepository;
 import com.epam.khimii.task4.repository.IOrderRepository;
@@ -33,7 +33,6 @@ public class ApplicationContext {
     private static final Product product4 = new Product("tomato", new BigDecimal(14.0), "uk");
     private static final Product product5 = new Product("peach", new BigDecimal(15.0), "uk");
     private static final Product product6 = new Product("olive", new BigDecimal(16.0), "ua");
-    private static final String FILENAME = "fileForTask6.txt";
     private IProductRepository productRepositoryImpl;
     private IBasketRepository basketRepositoryImpl;
     private IBufferRepository bufferRepositoryImpl;
@@ -100,11 +99,11 @@ public class ApplicationContext {
         return scanner;
     }
 
-    public void initAll() throws IOException, ClassNotFoundException {
+    public void initAll() {
         this.productRepositoryImpl = new ProductRepositoryImpl();
         this.productService = new ProductServiceImpl(productRepositoryImpl);
         this.fileHandler = new FileHandler();
-        products = fileHandler.load(FILENAME);
+        products = fileHandler.load();
         if (products.isEmpty()) {
             products.add(product1);
             products.add(product2);

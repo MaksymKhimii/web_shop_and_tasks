@@ -1,10 +1,10 @@
 package com.epam.khimii.task4.container;
 
 import com.epam.khimii.task4.parts.constants.Constants;
-import com.epam.khimii.task4.factory_input_data.AccessoriesInputData;
-import com.epam.khimii.task4.factory_input_data.ComputerPartInputData;
-import com.epam.khimii.task4.factory_input_data.GraphicsCardInputData;
-import com.epam.khimii.task4.factory_input_data.ProductInputData;
+import com.epam.khimii.task4.inputFactory.AccessoriesInputData;
+import com.epam.khimii.task4.inputFactory.ComputerPartInputData;
+import com.epam.khimii.task4.inputFactory.GraphicsCardInputData;
+import com.epam.khimii.task4.inputFactory.ProductInputData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,6 @@ public class ProductInputDataContainer {
         put(Constants.ACCESSORIES_INPUT_DATA_NUMBER, new AccessoriesInputData(scanner));
         put(Constants.GRAPHICS_CARD_INPUT_DATA_NUMBER, new GraphicsCardInputData(scanner));
     }};
-
 
     public ProductInputDataContainer(Scanner scanner) {
         this.scanner = scanner;

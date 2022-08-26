@@ -1,7 +1,7 @@
 import com.epam.khimii.task1.entity.Product;
 import com.epam.khimii.task3.list.UniqueProductArrayList;
 import com.epam.khimii.task4.container.FillStrategyContainer;
-import com.epam.khimii.task4.file_handler.FileHandler;
+import com.epam.khimii.task4.fileHandler.FileHandler;
 import com.epam.khimii.task4.strategy.InputProductStrategy;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +26,7 @@ public class Task6Test {
     @Before
     public void Before() {
         products = new UniqueProductArrayList<>();
-        products.addAll(new FileHandler().load("fileForTask6.txt"));
+        products.addAll(new FileHandler().load());
         product1 = new Product("apple", new BigDecimal("10"), "UKRAINE");
     }
 
@@ -42,7 +42,7 @@ public class Task6Test {
         InputProductStrategy strategy = (new FillStrategyContainer(scanner)).getStrategies(1);
         Product newProd = strategy.generateProduct();
         products.add(newProd);
-        new FileHandler().save(products, "fileForTask6Save.txt");
+        new FileHandler().save(products);
         Assert.assertEquals(6, products.size());
     }
 

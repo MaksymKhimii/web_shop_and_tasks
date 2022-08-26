@@ -1,9 +1,9 @@
 package com.epam.khimii.task4.strategy.impl;
 
 import com.epam.khimii.task1.entity.Product;
+import com.epam.khimii.task4.inputFactory.IProductInputData;
 import com.epam.khimii.task4.parts.constants.Constants;
 import com.epam.khimii.task4.container.ProductInputDataContainer;
-import com.epam.khimii.task4.factory_input_data.ProductInputData;
 import com.epam.khimii.task4.strategy.InputProductStrategy;
 
 import java.util.Scanner;
@@ -16,14 +16,13 @@ public class InputFromConsoleProductStrategy implements InputProductStrategy {
     private Scanner scanner;
     private ProductInputDataContainer container;
 
-
     public InputFromConsoleProductStrategy(Scanner scanner) {
         this.scanner = scanner;
         container = new ProductInputDataContainer(scanner);
     }
 
     public Product generateProduct() {
-        ProductInputData strategy = container.getInputData(getType());
+        IProductInputData strategy = container.getInputData(getType());
         return strategy.inputDataFromConsole();
     }
 

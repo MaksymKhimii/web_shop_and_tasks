@@ -1,11 +1,10 @@
 package com.epam.khimii.task4.entity;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class Basket implements Serializable {
+public class Basket {
     private static final Map<String, Integer> basket = new HashMap<>();
 
     public Map<String, Integer> getBasket() {
