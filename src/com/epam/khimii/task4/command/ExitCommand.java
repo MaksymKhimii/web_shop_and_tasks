@@ -15,5 +15,6 @@ public class ExitCommand implements Command {
     @Override
     public void execute() {
         fileHandler.save(productRepository.getProducts());
+        System.exit(0);
     }
 }

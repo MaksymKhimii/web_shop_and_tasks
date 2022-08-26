@@ -62,9 +62,6 @@ public class OnlineStore {
             myChoice = scanner.nextLine();
             Command command = commands.getOrDefault(myChoice, new NoCommand());
             command.execute();
-            if (Objects.equals(myChoice, "0")) {
-                break;
-            }
         }
     }
 }

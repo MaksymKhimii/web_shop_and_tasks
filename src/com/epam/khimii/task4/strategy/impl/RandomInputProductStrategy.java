@@ -18,8 +18,8 @@ import java.util.function.Supplier;
  * Generate product container of different randomize type of products
  */
 public class RandomInputProductStrategy implements InputProductStrategy {
-    private Random random = new Random();
-    ;
+    private Random random;
+
     private final Map<Integer, Supplier<Product>> generate = new HashMap<>() {{
         put(Constants.PRODUCT_CREATOR_NUMBER, () -> createProduct());
         put(Constants.ACCESSORIES_CREATOR_NUMBER, () -> createAccessories());
@@ -29,6 +29,7 @@ public class RandomInputProductStrategy implements InputProductStrategy {
 
 
     public RandomInputProductStrategy() {
+        random = new Random();
     }
 
     public Product generateProduct() {
