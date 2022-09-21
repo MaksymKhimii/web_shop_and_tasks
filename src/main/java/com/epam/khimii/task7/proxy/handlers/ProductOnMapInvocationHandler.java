@@ -1,5 +1,6 @@
 package com.epam.khimii.task7.proxy.handlers;
 
+import com.epam.khimii.task7.proxy.parser.MethodParsing;
 import com.epam.khimii.task7.proxy.products.IProduct;
 
 import java.lang.reflect.Field;
@@ -26,10 +27,10 @@ public class ProductOnMapInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         if (method.getName().startsWith("set")) {
-            fieldNameToValue.put(MethodParsing.getDeclaredNameFromMethod(method), args[0]);
+            fieldNameToValue.put(MethodParsing.getFieldNameFromMethod(method), args[0]);
             return null;
         } else if (method.getName().startsWith("get")) {
-            return fieldNameToValue.get(MethodParsing.getDeclaredNameFromMethod(method));
+            return fieldNameToValue.get(MethodParsing.getFieldNameFromMethod(method));
         }
         throw new UnsupportedOperationException();
     }

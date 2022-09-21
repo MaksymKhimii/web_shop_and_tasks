@@ -27,7 +27,8 @@ public class OnlineStore {
     public void init() {
             applicationContext.initAll();
         scanner = applicationContext.getScanner();
-        commands.put("0", new ExitCommand(applicationContext.getFileHandler(), applicationContext.getProductRepositoryImpl()));
+        commands.put("0", new ExitCommand(applicationContext.getFileHandler(),
+                applicationContext.getProductRepositoryImpl()));
         commands.put("1", new ShowProductsCommand(applicationContext.getProductRepositoryImpl()));
         commands.put("2", new AddProdToBasketCommand(applicationContext.getBasketServiceImpl(),
                 applicationContext.getProductService(), scanner));
@@ -37,8 +38,8 @@ public class OnlineStore {
         commands.put("6", new DoOrderCommand(applicationContext.getOrderServiceImpl()));
         commands.put("7", new ShowOrderByTimeRangeCommand(applicationContext.getOrderServiceImpl(), scanner));
         commands.put("8", new ShowOrderByTimeCommand(applicationContext.getOrderServiceImpl(), scanner));
-        commands.put("9", new AddProductToList(applicationContext.getProductService(), applicationContext.getFillStrategyContainer(),
-                applicationContext.getScanner()));
+        commands.put("9", new AddProductToList(applicationContext.getProductService(),
+                applicationContext.getFillStrategyContainer(), applicationContext.getScanner()));
         commands.put("10", new AddProductsWithReflectionCommand(applicationContext.getInputAppWithReflection(),
                 applicationContext.getProductService()));
     }
