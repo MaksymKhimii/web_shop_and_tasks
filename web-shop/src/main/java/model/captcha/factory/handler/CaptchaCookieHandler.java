@@ -1,7 +1,8 @@
 package model.captcha.factory.handler;
 
-import controller.pages.SignUpPage;
+import model.service.CaptchaService;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,15 +20,16 @@ public class CaptchaCookieHandler implements CaptchaHandler {
 
     @Override
     public String extract(HttpServletRequest request) {
+        ServletContext context = request.getServletContext();
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
         Cookie[] cookies = request.getCookies();
         String captchaId;
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("captcha")) {
                 captchaId = cookie.getValue();
-                return SignUpPage.getCaptchaValue(Integer.parseInt(captchaId));
+                return captchaService.getCaptchaValue(Integer.parseInt(captchaId));
             }
         }
-        //What exception should be here? custom exception?
         return null;
     }
 }

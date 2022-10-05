@@ -15,7 +15,6 @@
 <body>
 <div class="topnav">
     <a class="active" href="#">Log out</a>
-    <a href="/signUpPage"> Sign Up</a>
     <div class="topnav-right">
         <a href="#">Info </a>
         <a href="#">Eng</a>
@@ -31,7 +30,8 @@
     <button onclick="openForm()" style="width:auto;">Sign Up</button>
 </div>
 <div id="windowForm" class="modal">
-    <form class="modal-content animate" name="SignUpForm" method="post" action="/signUpCommand">
+    <form class="modal-content animate" name="SignUpForm" method="POST"
+          action="/SignUp">
         <div class="imgcontainer">
             <span onclick="closeForm()" class="close" title="Close Modal">&times;</span>
         </div>
@@ -52,8 +52,7 @@
             <input id="password" onkeyup="checkParams()" oninput="checkPassword()" type="password"
                    placeholder="password" name="password">
             <captcha:captchaHiddenId/>
-            <input id="captcha" name="captcha" type="text" path="captcha" placeholder="Enter Captcha" required="true"/>
-
+            <input id="captcha" name="captcha" type="text" placeholder="Enter Captcha" required/>
             <button id="submit" type="submit" disabled>Sign Up</button>
         </div>
         <div class="container" style="background-color:#f1f1f1">

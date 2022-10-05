@@ -1,7 +1,8 @@
 package model.captcha.factory.handler;
 
-import controller.pages.SignUpPage;
+import model.service.CaptchaService;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +17,11 @@ public class CaptchaHiddenFormFieldHandler implements CaptchaHandler {
 
     @Override
     public String extract(HttpServletRequest request) {
+        ServletContext context = request.getServletContext();
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
+        String lala = request.getParameter("hiddenCaptcha");
+        System.out.println("lala: " + lala);
         int captchaId = Integer.parseInt(request.getParameter("hiddenCaptcha"));
-        return SignUpPage.getCaptchaValue(captchaId);
+        return captchaService.getCaptchaValue(captchaId);
     }
 }

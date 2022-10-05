@@ -8,10 +8,21 @@ import java.util.Random;
  * captcha service
  */
 public class CaptchaService {
-    private static final HashMap<Integer, String> captchaHandler = new HashMap();
+    private final HashMap<Integer, String> captcha = new HashMap();
+    private int captchaId;
 
+    public int getCaptchaId() {
+        return captchaId;
+    }
 
-    public static HashMap<Integer, String> generateCaptcha() {
+    public HashMap<Integer, String> getCaptcha() {
+        return captcha;
+    }
+
+    /**
+     * this method return the key of current captcha
+     */
+    public Integer generateCaptcha() {
         String captcha = "1234567890";
         StringBuilder captchaBuffer = new StringBuilder();
         Random random = new Random();
@@ -19,22 +30,20 @@ public class CaptchaService {
             int index = (int) (random.nextFloat() * captcha.length());
             captchaBuffer.append(captcha.charAt(index));
         }
-        int id = random.nextInt(10);
-        captchaHandler.put(id, captchaBuffer.toString());
-        return captchaHandler;
+        captchaId = random.nextInt(10);
+        this.captcha.put(captchaId, captchaBuffer.toString());
+        return captchaId;
     }
 
-    public static Integer getCaptchaId(HashMap<Integer, String> captchaHandler) {
-        return captchaHandler.keySet().stream().findFirst().get();
+    public String getCaptchaValue(int key) {
+        return captcha.get(key);
     }
 
-    public static void deleteCurrentCaptcha(HttpServletRequest request) {
-        int captchaId = getCaptchaId(captchaHandler);
-        captchaHandler.remove(captchaId);
+    public void deleteCurrentCaptcha(HttpServletRequest request) {
+        captcha.remove(captchaId);
         System.out.println("The captcha was deleted");
-        generateCaptcha();
-        int newCaptchaId = getCaptchaId(captchaHandler);
-        String newCaptcha = captchaHandler.get(newCaptchaId);
+        int newCaptchaId = generateCaptcha();
+        String newCaptcha = captcha.get(newCaptchaId);
         System.out.println("newCaptcha: " + newCaptcha);
         request.setAttribute("hiddenCaptcha", newCaptcha);
     }

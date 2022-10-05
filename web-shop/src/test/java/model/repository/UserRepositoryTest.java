@@ -12,8 +12,10 @@ public class UserRepositoryTest {
     @Before
     public void beforeTest() {
         userRepository = new UserRepository();
-        userTest1 = new User("agent008", "Mark", "Samons", "12345", "markSamons@gmail.com");
-        userTest2 = new User("steve123", "Steve", "Jackson", "12345", "stevejackson@gmail.com");
+        userTest1 = new User().setLogin("agent008").setFirstName("James").setLastName( "Carrol")
+                .setEmail("jamescarrol@gmail.com").setPassword("54321");
+        userTest2 = new User().setLogin("steve123").setFirstName("Steve").setLastName( "Jackson")
+                .setEmail("stevejackson@gmail.com").setPassword("12345");
     }
 
     @Test
@@ -32,12 +34,6 @@ public class UserRepositoryTest {
     public void isUserNotExistsByUserTest() {
         boolean actual = userRepository.isUserExists(userTest1);
         Assert.assertFalse(actual);
-    }
-
-    @Test
-    public void isUserExistsByUserTest() {
-        boolean actual = userRepository.isUserExists(userTest2);
-        Assert.assertTrue(actual);
     }
 
     @Test

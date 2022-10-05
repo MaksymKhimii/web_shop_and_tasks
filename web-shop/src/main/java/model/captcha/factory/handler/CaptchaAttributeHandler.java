@@ -1,7 +1,8 @@
 package model.captcha.factory.handler;
 
-import controller.pages.SignUpPage;
+import model.service.CaptchaService;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,8 +19,10 @@ public class CaptchaAttributeHandler implements CaptchaHandler {
 
     @Override
     public String extract(HttpServletRequest request) {
+        ServletContext context = request.getServletContext();
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
         HttpSession session = request.getSession(true);
-        String captchaId = (String) session.getAttribute("captcha");
-        return SignUpPage.getCaptchaValue(Integer.parseInt(captchaId));
+        Integer captchaId =(Integer) session.getAttribute("captcha");
+        return captchaService.getCaptchaValue(captchaId);
     }
 }

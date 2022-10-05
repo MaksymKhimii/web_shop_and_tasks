@@ -1,11 +1,11 @@
 package model.captcha;
 
-import model.captcha.factory.CaptchaFactory;
 import model.captcha.factory.CaptchaHandlerFactory;
 import model.captcha.factory.handler.CaptchaHandler;
-import controller.pages.SignUpPage;
+import model.service.CaptchaService;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +19,7 @@ import java.util.HashMap;
 /**
  * in this class, a captcha image is generated
  * and the method for saving this captcha is called
+ *
  * @see CaptchaHandler
  * @see CaptchaHandlerFactory
  */
@@ -27,21 +28,17 @@ public class CaptchaSignUp extends HttpServlet {
 
     public static final String FILE_TYPE = "jpeg";
 
-    private static CaptchaHandler captchaHandler;
-
-    public static CaptchaHandler getCaptchaHandler() {
-        return captchaHandler;
-    }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServletContext context = request.getServletContext();
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
+        HashMap<Integer, String> captchaMap = captchaService.getCaptcha();
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setHeader("Progma", "no-cache");
         response.setDateHeader("Max-Age", 0);
-        HashMap<Integer, String> captchaMap = SignUpPage.getCaptcha();
-        int captchaId = SignUpPage.getCaptchaId(captchaMap);
-        String captcha = SignUpPage.getCaptchaValue(captchaId);
+        int captchaId = captchaService.getCaptchaId();
+        String captcha = captchaService.getCaptchaValue(captchaId);
         int width = 160, height = 35;
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.OPAQUE);
         Graphics graphics = bufferedImage.createGraphics();
@@ -50,9 +47,6 @@ public class CaptchaSignUp extends HttpServlet {
         graphics.fillRect(0, 0, width, height);
         graphics.setColor(new Color(255, 255, 255));
         graphics.drawString(captcha, 20, 25);
-        CaptchaFactory captchaFactory = new CaptchaHandlerFactory();
-        captchaHandler = captchaFactory.create(getServletConfig());
-        captchaHandler.save(String.valueOf(captchaId), request, response);
         OutputStream outputStream = response.getOutputStream();
         ImageIO.write(bufferedImage, FILE_TYPE, outputStream);
         outputStream.close();

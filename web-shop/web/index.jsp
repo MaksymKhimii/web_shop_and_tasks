@@ -12,7 +12,7 @@
 
 <div class="topnav">
     <a class="active" href="#">Log out</a>
-    <a href="/signUpPage"> Sign Up</a>
+    <a href="/SignUp"> Sign Up</a>
     <div class="topnav-right">
         <a href="#">Info </a>
         <a href="#">Eng</a>
@@ -48,19 +48,15 @@
         </div>
     </form>
 </div>
-
 <script>
     function openForm() {
         document.getElementById('loginForm').style.display = 'block';
     }
-
     function closeForm() {
         document.getElementById('loginForm').style.display = 'none';
     }
-
     // Get the modal
     var modal = document.getElementById('loginForm');
-
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal) {
