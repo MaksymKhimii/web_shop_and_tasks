@@ -20,9 +20,9 @@ public class CaptchaAttributeHandler implements CaptchaHandler {
     @Override
     public String extract(HttpServletRequest request) {
         ServletContext context = request.getServletContext();
-        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("captchaService");
         HttpSession session = request.getSession(true);
-        Integer captchaId =(Integer) session.getAttribute("captcha");
+        int captchaId = Integer.parseInt(session.getAttribute("captcha").toString());
         return captchaService.getCaptchaValue(captchaId);
     }
 }

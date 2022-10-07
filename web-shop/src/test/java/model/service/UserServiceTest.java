@@ -15,8 +15,10 @@ public class UserServiceTest {
     public void beforeTest() {
         userRepository = new UserRepository();
         userService = new UserService(userRepository);
-        userTest1 = new User("agent008", "Mark", "Samons", "12345", "markSamons@gmail.com");
-        userTest2 = new User("steve123", "Steve", "Jackson", "12345", "stevejackson@gmail.com");
+        userTest1 = new User().setLogin("agent008").setFirstName("Mark")
+                .setLastName("Samons").setEmail("markSamons@gmail.com").setPassword("12345");
+        userTest2 = new User().setLogin("steve123").setFirstName("Steve")
+                .setLastName("Jackson").setEmail("stevejackson@gmail.com").setPassword("12345");
     }
 
     @Test

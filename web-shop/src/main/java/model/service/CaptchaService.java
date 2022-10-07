@@ -1,28 +1,24 @@
 package model.service;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * captcha service
  */
 public class CaptchaService {
-    private final HashMap<Integer, String> captcha = new HashMap();
-    private int captchaId;
+    private final Map<Integer, String> captcha = new HashMap();
 
-    public int getCaptchaId() {
-        return captchaId;
-    }
-
-    public HashMap<Integer, String> getCaptcha() {
+    public Map<Integer, String> getCaptcha() {
         return captcha;
     }
 
-    /**
-     * this method return the key of current captcha
-     */
-    public Integer generateCaptcha() {
+    public Integer generateCaptcha(ServletContext context) {
         String captcha = "1234567890";
         StringBuilder captchaBuffer = new StringBuilder();
         Random random = new Random();
@@ -30,8 +26,9 @@ public class CaptchaService {
             int index = (int) (random.nextFloat() * captcha.length());
             captchaBuffer.append(captcha.charAt(index));
         }
-        captchaId = random.nextInt(10);
+        int captchaId = random.nextInt(10);
         this.captcha.put(captchaId, captchaBuffer.toString());
+        context.setAttribute("captchaId", captchaId);
         return captchaId;
     }
 
@@ -40,11 +37,21 @@ public class CaptchaService {
     }
 
     public void deleteCurrentCaptcha(HttpServletRequest request) {
-        captcha.remove(captchaId);
-        System.out.println("The captcha was deleted");
-        int newCaptchaId = generateCaptcha();
+        ServletContext context = request.getServletContext();
+        captcha.remove(Integer.parseInt(context.getAttribute("captchaId").toString()));
+        int newCaptchaId = generateCaptcha(context);
         String newCaptcha = captcha.get(newCaptchaId);
-        System.out.println("newCaptcha: " + newCaptcha);
         request.setAttribute("hiddenCaptcha", newCaptcha);
+    }
+
+    public void updateCaptcha(HttpServletRequest request) {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                deleteCurrentCaptcha(request);
+            }
+        };
+        timer.schedule(task, 60 * 1000);
     }
 }

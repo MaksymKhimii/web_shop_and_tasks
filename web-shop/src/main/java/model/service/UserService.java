@@ -5,6 +5,7 @@ import model.repository.UserRepository;
 
 /**
  * user service
+ *
  * @see UserRepository
  */
 public class UserService {

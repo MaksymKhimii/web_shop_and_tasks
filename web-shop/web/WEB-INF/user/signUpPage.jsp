@@ -31,7 +31,7 @@
 </div>
 <div id="windowForm" class="modal">
     <form class="modal-content animate" name="SignUpForm" method="POST"
-          action="/SignUp">
+          action="/signUp">
         <div class="imgcontainer">
             <span onclick="closeForm()" class="close" title="Close Modal">&times;</span>
         </div>
@@ -52,7 +52,7 @@
             <input id="password" onkeyup="checkParams()" oninput="checkPassword()" type="password"
                    placeholder="password" name="password">
             <captcha:captchaHiddenId/>
-            <input id="captcha" name="captcha" type="text" placeholder="Enter Captcha" required/>
+            <input id="captchaInput" name="captchaInput" type="text" placeholder="Enter Captcha" required/>
             <button id="submit" type="submit" disabled>Sign Up</button>
         </div>
         <div class="container" style="background-color:#f1f1f1">

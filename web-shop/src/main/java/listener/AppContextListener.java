@@ -1,5 +1,8 @@
 package listener;
 
+import model.captcha.factory.CaptchaFactory;
+import model.captcha.factory.CaptchaHandlerFactory;
+import model.captcha.factory.handler.CaptchaHandler;
 import model.repository.UserRepository;
 import model.service.CaptchaService;
 import model.service.UserService;
@@ -13,18 +16,13 @@ public class AppContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
         UserRepository userRepository = new UserRepository();
-        context.setAttribute("UserRepository", userRepository);
-        //services
+        context.setAttribute("userRepository", userRepository);
         UserService userService = new UserService(userRepository);
-        context.setAttribute("UserService", userService);
+        context.setAttribute("userService", userService);
         CaptchaService captchaService = new CaptchaService();
-        context.setAttribute("CaptchaService", captchaService);
-    }
-
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        ServletContext context = servletContextEvent.getServletContext();
-        context.removeAttribute("UserRepository");
-        context.removeAttribute("UserService");
-        context.removeAttribute("CaptchaService");
+        context.setAttribute("captchaService", captchaService);
+        CaptchaFactory captchaFactory = new CaptchaHandlerFactory();
+        CaptchaHandler captchaHandler = captchaFactory.create(context.getInitParameter("captchaHandler"));
+        context.setAttribute("captchaHandler", captchaHandler);
     }
 }

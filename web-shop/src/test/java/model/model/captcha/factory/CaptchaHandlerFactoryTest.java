@@ -31,7 +31,7 @@ public class CaptchaHandlerFactoryTest {
         Mockito.when(servletConfig.getServletContext()).thenReturn(context);
         Mockito.when(context.getInitParameter("captchaHandler")).thenReturn("attribute");
         captchaHandlerExpected = new CaptchaAttributeHandler();
-        Assert.assertEquals(captchaHandlerExpected.getClass(), captchaHandlerFactory.create(servletConfig).getClass());
+        Assert.assertEquals(captchaHandlerExpected.getClass(), captchaHandlerFactory.create("attribute").getClass());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class CaptchaHandlerFactoryTest {
         Mockito.when(servletConfig.getServletContext()).thenReturn(context);
         Mockito.when(context.getInitParameter("captchaHandler")).thenReturn("cookie");
         captchaHandlerExpected = new CaptchaCookieHandler();
-        Assert.assertEquals(captchaHandlerExpected.getClass(), captchaHandlerFactory.create(servletConfig).getClass());
+        Assert.assertEquals(captchaHandlerExpected.getClass(), captchaHandlerFactory.create("cookie").getClass());
     }
 
     @Test
@@ -47,6 +47,6 @@ public class CaptchaHandlerFactoryTest {
         Mockito.when(servletConfig.getServletContext()).thenReturn(context);
         Mockito.when(context.getInitParameter("captchaHandler")).thenReturn("hiddenField");
         captchaHandlerExpected = new CaptchaHiddenFormFieldHandler();
-        Assert.assertEquals(captchaHandlerExpected.getClass(), captchaHandlerFactory.create(servletConfig).getClass());
+        Assert.assertEquals(captchaHandlerExpected.getClass(), captchaHandlerFactory.create("hiddenFormField").getClass());
     }
 }

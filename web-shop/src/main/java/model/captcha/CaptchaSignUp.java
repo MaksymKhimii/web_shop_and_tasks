@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 
 /**
  * in this class, a captcha image is generated
@@ -31,15 +30,15 @@ public class CaptchaSignUp extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ServletContext context = request.getServletContext();
-        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
-        HashMap<Integer, String> captchaMap = captchaService.getCaptcha();
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("captchaService");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setHeader("Progma", "no-cache");
         response.setDateHeader("Max-Age", 0);
-        int captchaId = captchaService.getCaptchaId();
+        int captchaId = Integer.parseInt(context.getAttribute("captchaId").toString());
         String captcha = captchaService.getCaptchaValue(captchaId);
-        int width = 160, height = 35;
+        int width = 160;
+        int height = 35;
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.OPAQUE);
         Graphics graphics = bufferedImage.createGraphics();
         graphics.setFont(new Font("Arial", Font.BOLD, 20));

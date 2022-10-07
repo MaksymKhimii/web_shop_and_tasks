@@ -18,9 +18,7 @@ public class CaptchaHiddenFormFieldHandler implements CaptchaHandler {
     @Override
     public String extract(HttpServletRequest request) {
         ServletContext context = request.getServletContext();
-        CaptchaService captchaService = (CaptchaService) context.getAttribute("CaptchaService");
-        String lala = request.getParameter("hiddenCaptcha");
-        System.out.println("lala: " + lala);
+        CaptchaService captchaService = (CaptchaService) context.getAttribute("captchaService");
         int captchaId = Integer.parseInt(request.getParameter("hiddenCaptcha"));
         return captchaService.getCaptchaValue(captchaId);
     }

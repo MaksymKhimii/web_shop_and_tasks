@@ -13,9 +13,8 @@ import java.util.List;
 public class UserRepository {
     private List<User> users = new ArrayList<>() {
         {
-            add(new User().setLogin("steve123").setFirstName("Steve").setLastName( "Jackson")
-                    .setEmail("stevejackson@gmail.com").setPassword("12345"));
-            add(new User().setLogin("agent007").setFirstName("James").setLastName( "Carrol")
+            add(new User().setLogin("steve123").setFirstName("Steve").setLastName("Jackson").setEmail("stevejackson@gmail.com").setPassword("12345"));
+            add(new User().setLogin("agent007").setFirstName("James").setLastName("Carrol")
                     .setEmail("jamescarrol@gmail.com").setPassword("54321"));
         }
     };

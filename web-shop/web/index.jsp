@@ -12,7 +12,7 @@
 
 <div class="topnav">
     <a class="active" href="#">Log out</a>
-    <a href="/SignUp"> Sign Up</a>
+    <a href="/signUp"> Sign Up</a>
     <div class="topnav-right">
         <a href="#">Info </a>
         <a href="#">Eng</a>
