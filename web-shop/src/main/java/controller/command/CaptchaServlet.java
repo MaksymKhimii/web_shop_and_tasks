@@ -1,4 +1,4 @@
-package model.captcha;
+package controller.command;
 
 import model.captcha.factory.CaptchaHandlerFactory;
 import model.captcha.factory.handler.CaptchaHandler;
@@ -23,20 +23,30 @@ import java.io.OutputStream;
  * @see CaptchaHandlerFactory
  */
 @WebServlet("/captcha-servlet")
-public class CaptchaSignUp extends HttpServlet {
+public class CaptchaServlet extends HttpServlet {
 
     public static final String FILE_TYPE = "jpeg";
+    private CaptchaService captchaService;
+    private CaptchaHandler captchaHandler;
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ServletContext context = request.getServletContext();
-        CaptchaService captchaService = (CaptchaService) context.getAttribute("captchaService");
+    public void init() {
+        ServletContext context = getServletContext();
+        captchaService = (CaptchaService) context.getAttribute("captchaService");
+        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setHeader("Progma", "no-cache");
-        response.setDateHeader("Max-Age", 0);
-        int captchaId = Integer.parseInt(context.getAttribute("captchaId").toString());
-        String captcha = captchaService.getCaptchaValue(captchaId);
+        String captchaId = captchaHandler.extract(request);
+        String captcha = captchaService.getCaptchaValue(Integer.parseInt(captchaId));
         int width = 160;
         int height = 35;
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.OPAQUE);
@@ -49,10 +59,5 @@ public class CaptchaSignUp extends HttpServlet {
         OutputStream outputStream = response.getOutputStream();
         ImageIO.write(bufferedImage, FILE_TYPE, outputStream);
         outputStream.close();
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        doPost(request, response);
     }
 }

@@ -14,9 +14,16 @@ import java.io.IOException;
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
     private UserExtractor extractor;
+    private UserService userService;
+    private CaptchaService captchaService;
+    private CaptchaHandler captchaHandler;
 
     @Override
     public void init() {
+        ServletContext context = getServletContext();
+        userService = (UserService) context.getAttribute("userService");
+        captchaService = (CaptchaService) context.getAttribute("captchaService");
+        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
         extractor = new UserExtractor();
     }
 
@@ -24,20 +31,16 @@ public class SignUpServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ServletContext context = request.getServletContext();
         CaptchaService captchaService = (CaptchaService) context.getAttribute("captchaService");
-        int captchaId = captchaService.generateCaptcha(context);
-        captchaService.updateCaptcha(request);
-        CaptchaHandler captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
-        captchaHandler.save(String.valueOf(captchaId), request, response);
+        captchaService.updateCaptcha(request, response);
         response.sendRedirect("/signUpPage");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = "/error";
-        ServletContext context = request.getServletContext();
-        UserService userService = (UserService) context.getAttribute("userService");
-        CaptchaHandler captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
-        String captcha = captchaHandler.extract(request);
+        String captchaId = captchaHandler.extract(request);
+        System.out.println("captchaId in SIgnUp: " + captchaId);
+        String captcha = captchaService.getCaptchaValue(Integer.parseInt(captchaId));
         String captchaFromUser = request.getParameter("captchaInput");
         if (captchaFromUser.equals(captcha)) {
             User newUser = extractor.extract(request);

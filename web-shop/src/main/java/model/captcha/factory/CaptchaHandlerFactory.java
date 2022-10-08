@@ -5,7 +5,6 @@ import model.captcha.factory.handler.CaptchaCookieHandler;
 import model.captcha.factory.handler.CaptchaHandler;
 import model.captcha.factory.handler.CaptchaHiddenFormFieldHandler;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,11 +19,10 @@ import java.util.Map;
 public class CaptchaHandlerFactory implements CaptchaFactory {
     @Override
     public CaptchaHandler create(String stringCaptchaProperty) {
-        Map<String, CaptchaHandler> captchaHandlerMap = new HashMap<>() {{
-            put("attribute", new CaptchaAttributeHandler());
-            put("cookie", new CaptchaCookieHandler());
-            put("hiddenFormField", new CaptchaHiddenFormFieldHandler());
-        }};
+        Map<String, CaptchaHandler> captchaHandlerMap = Map.of(
+                "attribute", new CaptchaAttributeHandler(),
+                "cookie", new CaptchaCookieHandler(),
+                "hiddenFormField", new CaptchaHiddenFormFieldHandler());
         return captchaHandlerMap.get(stringCaptchaProperty);
     }
 }

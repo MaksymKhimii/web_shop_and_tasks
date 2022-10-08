@@ -2,8 +2,13 @@ package model.captcha.factory;
 
 import model.captcha.factory.handler.CaptchaHandler;
 
-import javax.servlet.ServletConfig;
-
 public interface CaptchaFactory {
-    CaptchaHandler create(String config);
+    /**
+     * method for creating captcha handler depending on property
+     *
+     * @param stringCaptchaProperty property "captchaHandler" from web.xml
+     * @return CaptchaHandler
+     * @see CaptchaHandler
+     */
+    CaptchaHandler create(String stringCaptchaProperty);
 }

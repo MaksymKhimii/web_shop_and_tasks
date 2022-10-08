@@ -1,7 +1,10 @@
 package model.service;
 
+import model.captcha.factory.handler.CaptchaHandler;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -12,13 +15,13 @@ import java.util.TimerTask;
  * captcha service
  */
 public class CaptchaService {
-    private final Map<Integer, String> captcha = new HashMap();
-
+    private final Map<Integer, String> captcha = new HashMap<>();
+    private CaptchaHandler captchaHandler;
     public Map<Integer, String> getCaptcha() {
         return captcha;
     }
 
-    public Integer generateCaptcha(ServletContext context) {
+    public Integer generateCaptcha(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
         String captcha = "1234567890";
         StringBuilder captchaBuffer = new StringBuilder();
         Random random = new Random();
@@ -28,7 +31,8 @@ public class CaptchaService {
         }
         int captchaId = random.nextInt(10);
         this.captcha.put(captchaId, captchaBuffer.toString());
-        context.setAttribute("captchaId", captchaId);
+        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
+        captchaHandler.save(String.valueOf(captchaId), request, response);
         return captchaId;
     }
 
@@ -36,20 +40,16 @@ public class CaptchaService {
         return captcha.get(key);
     }
 
-    public void deleteCurrentCaptcha(HttpServletRequest request) {
+    public void updateCaptcha(HttpServletRequest request, HttpServletResponse response) {
         ServletContext context = request.getServletContext();
-        captcha.remove(Integer.parseInt(context.getAttribute("captchaId").toString()));
-        int newCaptchaId = generateCaptcha(context);
-        String newCaptcha = captcha.get(newCaptchaId);
-        request.setAttribute("hiddenCaptcha", newCaptcha);
-    }
-
-    public void updateCaptcha(HttpServletRequest request) {
+        int newCaptchaId = generateCaptcha(context, request, response);
+        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                deleteCurrentCaptcha(request);
+                captcha.remove(Integer.parseInt(captchaHandler.extract(request)));
+                captchaHandler.save(String.valueOf(newCaptchaId), request, response);
             }
         };
         timer.schedule(task, 60 * 1000);
