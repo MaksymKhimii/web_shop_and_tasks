@@ -19,10 +19,10 @@ public class AppContextListener implements ServletContextListener {
         context.setAttribute("userRepository", userRepository);
         UserService userService = new UserService(userRepository);
         context.setAttribute("userService", userService);
-        CaptchaService captchaService = new CaptchaService();
-        context.setAttribute("captchaService", captchaService);
         CaptchaFactory captchaFactory = new CaptchaHandlerFactory();
         CaptchaHandler captchaHandler = captchaFactory.create(context.getInitParameter("captchaHandler"));
         context.setAttribute("captchaHandler", captchaHandler);
+        CaptchaService captchaService = new CaptchaService(context);
+        context.setAttribute("captchaService", captchaService);
     }
 }

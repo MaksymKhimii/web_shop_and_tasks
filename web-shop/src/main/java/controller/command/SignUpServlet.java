@@ -39,7 +39,6 @@ public class SignUpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = "/error";
         String captchaId = captchaHandler.extract(request);
-        System.out.println("captchaId in SIgnUp: " + captchaId);
         String captcha = captchaService.getCaptchaValue(Integer.parseInt(captchaId));
         String captchaFromUser = request.getParameter("captchaInput");
         if (captchaFromUser.equals(captcha)) {

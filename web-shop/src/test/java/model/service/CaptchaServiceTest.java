@@ -20,8 +20,8 @@ public class CaptchaServiceTest {
 
     @Before
     public void beforeTest() {
-        captchaService = new CaptchaService();
         context = Mockito.mock(ServletContext.class);
+        captchaService = new CaptchaService(context);
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
         captchaHandler = Mockito.mock(CaptchaAttributeHandler.class);
@@ -30,7 +30,7 @@ public class CaptchaServiceTest {
     @Test
     public void generateCaptchaTest() {
         Mockito.when(context.getAttribute("captchaHandler")).thenReturn(captchaHandler);
-        int actualCaptchaId = captchaService.generateCaptcha(context, request, response);
+        int actualCaptchaId = captchaService.generateCaptcha(request, response);
         Mockito.verify(context);
         Assert.assertTrue(actualCaptchaId >= 0 && actualCaptchaId <= 9);
     }

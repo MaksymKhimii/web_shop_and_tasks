@@ -16,12 +16,17 @@ import java.util.TimerTask;
  */
 public class CaptchaService {
     private final Map<Integer, String> captcha = new HashMap<>();
-    private CaptchaHandler captchaHandler;
+    private final CaptchaHandler captchaHandler;
+
+    public CaptchaService(ServletContext context) {
+        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
+    }
+
     public Map<Integer, String> getCaptcha() {
         return captcha;
     }
 
-    public Integer generateCaptcha(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+    public Integer generateCaptcha(HttpServletRequest request, HttpServletResponse response) {
         String captcha = "1234567890";
         StringBuilder captchaBuffer = new StringBuilder();
         Random random = new Random();
@@ -31,7 +36,6 @@ public class CaptchaService {
         }
         int captchaId = random.nextInt(10);
         this.captcha.put(captchaId, captchaBuffer.toString());
-        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
         captchaHandler.save(String.valueOf(captchaId), request, response);
         return captchaId;
     }
@@ -41,9 +45,7 @@ public class CaptchaService {
     }
 
     public void updateCaptcha(HttpServletRequest request, HttpServletResponse response) {
-        ServletContext context = request.getServletContext();
-        int newCaptchaId = generateCaptcha(context, request, response);
-        captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
+        int newCaptchaId = generateCaptcha(request, response);
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -52,6 +54,6 @@ public class CaptchaService {
                 captchaHandler.save(String.valueOf(newCaptchaId), request, response);
             }
         };
-        timer.schedule(task, 60 * 1000);
+        timer.schedule(task, 600 * 1000);
     }
 }

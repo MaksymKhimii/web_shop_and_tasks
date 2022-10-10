@@ -27,11 +27,12 @@ public class CaptchaServlet extends HttpServlet {
 
     public static final String FILE_TYPE = "jpeg";
     private CaptchaService captchaService;
+    private ServletContext context;
     private CaptchaHandler captchaHandler;
 
     @Override
     public void init() {
-        ServletContext context = getServletContext();
+        context = getServletContext();
         captchaService = (CaptchaService) context.getAttribute("captchaService");
         captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
     }
@@ -45,7 +46,12 @@ public class CaptchaServlet extends HttpServlet {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setHeader("Progma", "no-cache");
-        String captchaId = captchaHandler.extract(request);
+        String captchaId;
+        if (context.getInitParameter("captchaHandler").equals("hiddenFormField")) {
+            captchaId = (String) context.getAttribute("captchaId");
+        } else {
+            captchaId = captchaHandler.extract(request);
+        }
         String captcha = captchaService.getCaptchaValue(Integer.parseInt(captchaId));
         int width = 160;
         int height = 35;

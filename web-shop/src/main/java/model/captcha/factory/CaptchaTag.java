@@ -20,12 +20,17 @@ public class CaptchaTag extends TagSupport {
     public int doStartTag() {
         ServletContext context = pageContext.getServletContext();
         JspWriter out = pageContext.getOut();
-        CaptchaHandler captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        String captchaId = captchaHandler.extract(request);
+        String captchaId;
+        if (context.getInitParameter("captchaHandler").equals("hiddenFormField")) {
+            captchaId = (String) context.getAttribute("captchaId");
+        } else {
+            CaptchaHandler captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
+            HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+            captchaId = captchaHandler.extract(request);
+        }
         try {
+            out.println("<input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"" + captchaId + "\">");
             out.println("<img alt=\"captcha\" src=\"/captcha-servlet\">");
-            out.println(" <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"" + captchaId + "\">");
         } catch (Exception e) {
             e.printStackTrace();
         }

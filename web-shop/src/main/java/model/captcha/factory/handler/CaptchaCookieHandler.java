@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 /**
  * handler for saving captchaId in cookie
+ *
  * @see CaptchaHandler
  */
 public class CaptchaCookieHandler implements CaptchaHandler {
@@ -21,7 +22,7 @@ public class CaptchaCookieHandler implements CaptchaHandler {
     public String extract(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         return Arrays.stream(cookies)
-                .filter(cookie1 -> cookie1.getName().equals("captchaId"))
+                .filter(cookie -> cookie.getName().equals("captchaId"))
                 .map(Cookie::getValue)
                 .findAny()
                 .orElse("");
