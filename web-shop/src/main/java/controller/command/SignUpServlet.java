@@ -31,7 +31,8 @@ public class SignUpServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ServletContext context = request.getServletContext();
         CaptchaService captchaService = (CaptchaService) context.getAttribute("captchaService");
-        captchaService.updateCaptcha(request, response);
+        int captchaId = captchaService.generateCaptcha();
+        captchaHandler.save(String.valueOf(captchaId), request, response);
         response.sendRedirect("/signUpPage");
     }
 
@@ -39,13 +40,15 @@ public class SignUpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = "/error";
         String captchaId = captchaHandler.extract(request);
-        String captcha = captchaService.getCaptchaValue(Integer.parseInt(captchaId));
-        String captchaFromUser = request.getParameter("captchaInput");
-        if (captchaFromUser.equals(captcha)) {
-            User newUser = extractor.extract(request);
-            userService.registerNewUser(newUser);
-            if (userService.checkUser(newUser)) {
-                path = "/login";
+        if (!captchaId.equals("")) {
+            String captcha = captchaService.getCaptchaValue(Integer.parseInt(captchaId));
+            String captchaFromUser = request.getParameter("captchaInput");
+            if (captchaFromUser.equals(captcha)) {
+                User newUser = extractor.extract(request);
+                userService.registerNewUser(newUser);
+                if (userService.checkUser(newUser)) {
+                    path = "/login";
+                }
             }
         }
         response.sendRedirect(path);

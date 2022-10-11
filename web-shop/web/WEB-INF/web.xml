@@ -34,6 +34,6 @@
   </listener>
   <context-param>
     <param-name>captchaHandler</param-name>
-    <param-value>attribute</param-value>
+    <param-value>hiddenFormField</param-value>
   </context-param>
 </web-app>

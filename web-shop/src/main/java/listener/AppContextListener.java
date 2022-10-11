@@ -15,14 +15,17 @@ import javax.servlet.ServletContextListener;
 public class AppContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
+
         UserRepository userRepository = new UserRepository();
         context.setAttribute("userRepository", userRepository);
+
         UserService userService = new UserService(userRepository);
         context.setAttribute("userService", userService);
         CaptchaFactory captchaFactory = new CaptchaHandlerFactory();
         CaptchaHandler captchaHandler = captchaFactory.create(context.getInitParameter("captchaHandler"));
+
         context.setAttribute("captchaHandler", captchaHandler);
-        CaptchaService captchaService = new CaptchaService(context);
+        CaptchaService captchaService = new CaptchaService();
         context.setAttribute("captchaService", captchaService);
     }
 }
