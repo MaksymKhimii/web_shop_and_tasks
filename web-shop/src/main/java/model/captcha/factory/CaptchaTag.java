@@ -7,6 +7,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
 
 /**
  * in this class, a custom tag is generated
@@ -23,13 +24,13 @@ public class CaptchaTag extends TagSupport {
         String captchaId;
         if (context.getInitParameter("captchaHandler").equals("hiddenFormField")) {
             captchaId = (String) context.getAttribute("captchaId");
-        } else {
-            CaptchaHandler captchaHandler = (CaptchaHandler) context.getAttribute("captchaHandler");
-            HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-            captchaId = captchaHandler.extract(request);
+            try {
+                out.println("<input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"" + captchaId + "\">");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         try {
-            out.println("<input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"" + captchaId + "\">");
             out.println("<img alt=\"captcha\" src=\"/captcha-servlet\">");
         } catch (Exception e) {
             e.printStackTrace();
